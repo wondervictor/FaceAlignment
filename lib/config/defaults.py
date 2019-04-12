@@ -48,7 +48,9 @@ _C.LOSS.USE_DIFFERENT_JOINTS_WEIGHT = False
 # DATASET related params
 _C.DATASET = CN()
 _C.DATASET.ROOT = ''
-_C.DATASET.DATASET = 'mpii'
+_C.DATASET.DATASET = 'aflw'
+_C.DATASET.TRAIN_CSV = ''
+_C.DATASET.TEST_CSV = ''
 _C.DATASET.TRAIN_SET = 'train'
 _C.DATASET.TEST_SET = 'valid'
 _C.DATASET.DATA_FORMAT = 'jpg'
@@ -121,15 +123,6 @@ def update_config(cfg, args):
     cfg.defrost()
     cfg.merge_from_file(args.cfg)
     cfg.merge_from_list(args.opts)
-
-    if args.modelDir:
-        cfg.OUTPUT_DIR = args.modelDir
-
-    if args.logDir:
-        cfg.LOG_DIR = args.logDir
-
-    if args.dataDir:
-        cfg.DATA_DIR = args.dataDir
 
     cfg.DATASET.ROOT = os.path.join(
         cfg.DATA_DIR, cfg.DATASET.ROOT
