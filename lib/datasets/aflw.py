@@ -54,7 +54,7 @@ class AFLW(data.Dataset):
         img = Image.open(image_path).convert('RGB')
 
         # transform !
-        img = self.transform(img)
+        # img = self.transform(img)
 
         r = 0
         if self.is_train:
