@@ -6,10 +6,22 @@ import torch
 import torch.utils.data as data
 import pandas as pd
 from PIL import Image
+import numpy as np
+
+from ..utils.transforms import shufflelr, crop
 
 
 class AFLW(data.Dataset):
+    """AFLW
 
+    import torchvision.transforms as transforms
+
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+
+    """
     def __init__(self, cfg, image_set, is_train=True, transform=None):
         # specify annotation file for dataset
         if is_train:
@@ -20,8 +32,8 @@ class AFLW(data.Dataset):
         self.is_train = is_train
         self.transform = transform
         self.data_root = cfg.DATASET.ROOT
-        self.inp_res = cfg.MODEL.IMAGE_SIZE
-        self.out_res = cfg.MODEL.HEATMAP_SIZE
+        self.input_size = cfg.MODEL.IMAGE_SIZE
+        self.output_size = cfg.MODEL.HEATMAP_SIZE
         self.sigma = cfg.MODEL.SIGMA
         self.scale_factor = cfg.DATASET.SCALE_FACTOR
         self.rot_factor = cfg.DATASET.ROT_FACTOR
@@ -51,7 +63,7 @@ class AFLW(data.Dataset):
 
         scale *= 1.5
         nparts = pts.size(0)
-        img = Image.open(image_path).convert('RGB')
+        img = np.array(Image.open(image_path).convert('RGB'))
 
         # transform !
         # img = self.transform(img)
@@ -63,7 +75,13 @@ class AFLW(data.Dataset):
             r = random.uniform(-self.rot_factor, self.rot_factor) \
                 if random.random() <= 0.6 else 0
             if random.random() <= 0.5 and self.flip:
-                pass
+                img = np.fliplr(img)
+                pts = shufflelr(pts, width=img.shape[1], dataset='aflw')
+                center[0] = img.shape[1] - center[0]
+                center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 3]
+
+        img = crop(img, center, scale, self.input_size, rot=r)
+        img = self.transform(img)
 
 
 if __name__ == '__main__':
