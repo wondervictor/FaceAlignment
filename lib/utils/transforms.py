@@ -33,6 +33,14 @@ def shufflelr(x, width, dataset='mpii'):
             [88, 92], [89, 91], [95, 93], [96, 97]
 
         )
+    elif dataset == '300w':
+        matched_parts = (
+            [1, 17], [2, 16], [3, 15], [4, 14], [5, 13], [6, 12], [7, 11], [8, 10],
+            [18, 27], [19, 26], [20, 25], [21, 24], [22, 23],
+            [32, 36], [33, 35],
+            [37, 46], [38, 45], [39, 44], [40, 43], [41, 48], [42, 47],
+            [49, 55], [50, 54], [51, 53], [62, 64], [61, 65], [68, 66], [59, 57], [60, 56]
+        )
     else:
         # print('Not supported dataset: ' + dataset)
         raise NotImplemented()
@@ -140,7 +148,7 @@ def get_transform(center, scale, res, rot=0):
     return t
 
 
-def transform(pt, center, scale, res, invert=0, rot=0):
+def transform_pixel(pt, center, scale, res, invert=0, rot=0):
     # Transform pixel location to different reference
     t = get_transform(center, scale, res, rot=rot)
     if invert:
@@ -172,9 +180,9 @@ def crop(img, center, scale, res, rot=0):
             scale = scale / sf
 
     # Upper left point
-    ul = np.array(transform([0, 0], center_new, scale, res, invert=1))
+    ul = np.array(transform_pixel([0, 0], center_new, scale, res, invert=1))
     # Bottom right point
-    br = np.array(transform(res, center_new, scale, res, invert=1))
+    br = np.array(transform_pixel(res, center_new, scale, res, invert=1))
 
     # Padding so that when rotated proper amount of context is included
     pad = int(np.linalg.norm(br - ul) / 2 - float(br[1] - ul[1]) / 2)
@@ -210,7 +218,7 @@ def crop(img, center, scale, res, rot=0):
 def get_labelmap(img, pt, sigma, label_type='Gaussian'):
     # Draw a 2D gaussian
     # Adopted from https://github.com/anewell/pose-hg-train/blob/master/src/pypose/draw.py
-    img = to_numpy(img)
+    # img = to_numpy(img)
 
     # Check that any part of the gaussian is in-bounds
     ul = [int(pt[0] - 3 * sigma), int(pt[1] - 3 * sigma)]
@@ -218,7 +226,7 @@ def get_labelmap(img, pt, sigma, label_type='Gaussian'):
     if (ul[0] >= img.shape[1] or ul[1] >= img.shape[0] or
             br[0] < 0 or br[1] < 0):
         # If not, just return the image as is
-        return to_torch(img)
+        return img
 
     # Generate gaussian
     size = 6 * sigma + 1
@@ -226,9 +234,9 @@ def get_labelmap(img, pt, sigma, label_type='Gaussian'):
     y = x[:, np.newaxis]
     x0 = y0 = size // 2
     # The gaussian is not normalized, we want the center value to equal 1
-    if type == 'Gaussian':
+    if label_type == 'Gaussian':
         g = np.exp(- ((x - x0) ** 2 + (y - y0) ** 2) / (2 * sigma ** 2))
-    elif type == 'Cauchy':
+    else:
         g = sigma / (((x - x0) ** 2 + (y - y0) ** 2 + sigma ** 2) ** 1.5)
 
     # Usable gaussian range
@@ -239,7 +247,8 @@ def get_labelmap(img, pt, sigma, label_type='Gaussian'):
     img_y = max(0, ul[1]), min(br[1], img.shape[0])
 
     img[img_y[0]:img_y[1], img_x[0]:img_x[1]] = g[g_y[0]:g_y[1], g_x[0]:g_x[1]]
-    return to_torch(img)
+    return img
+
 
 
 # def fliplr(x):

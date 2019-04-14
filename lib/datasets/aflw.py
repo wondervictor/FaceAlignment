@@ -8,7 +8,7 @@ import pandas as pd
 from PIL import Image
 import numpy as np
 
-from ..utils.transforms import shufflelr, crop
+from ..utils.transforms import shufflelr, crop, get_labelmap, transform_pixel
 
 
 class AFLW(data.Dataset):
@@ -18,11 +18,12 @@ class AFLW(data.Dataset):
 
     transform = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225]),
     ])
 
     """
-    def __init__(self, cfg, image_set, is_train=True, transform=None):
+    def __init__(self, cfg, is_train=True, transform=None):
         # specify annotation file for dataset
         if is_train:
             self.csv_file = cfg.DATASET.TRAIN_CSV
@@ -59,9 +60,9 @@ class AFLW(data.Dataset):
 
         pts = self.landmarks_frame.iloc[idx, 5:].values
         pts = pts.astype('float').reshape(-1, 2)
-        pts = torch.Tensor(pts.tolist())
+        # pts = torch.Tensor(pts.tolist())
 
-        scale *= 1.5
+        scale *= 1.25
         nparts = pts.size(0)
         img = np.array(Image.open(image_path).convert('RGB'))
 
@@ -81,7 +82,26 @@ class AFLW(data.Dataset):
                 center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 3]
 
         img = crop(img, center, scale, self.input_size, rot=r)
+
+        target = np.zeros((nparts, self.output_size[0], self.output_size[1]))
+        tpts = pts.clone()
+
+        for i in range(nparts):
+            if tpts[i, 1] > 0:
+                tpts[i, 0:2] = transform_pixel(tpts[i, 0:2]+1, center,
+                                               scale, self.output_size, rot=r)
+                target[i] = get_labelmap(target[i], tpts[i]-1, self.sigma,
+                                         label_type=self.label_type)
+
         img = self.transform(img)
+        target = torch.Tensor(target)
+        tpts = torch.Tensor(tpts)
+        center = torch.Tensor(center)
+
+        meta = {'index': idx, 'center': center, 'scale': scale,
+                'pts': torch.Tensor(pts), 'tpts': tpts, 'box_size': box_size}
+
+        return img, target, meta
 
 
 if __name__ == '__main__':

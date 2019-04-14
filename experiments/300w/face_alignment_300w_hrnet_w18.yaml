@@ -5,7 +5,7 @@ WORKERS: 4
 PRINT_FREQ: 100
 
 DATASET:
-  DATASET: AFLW
+  DATASET: 300W
   ROOT: 'dataset/'
 MODEL:
   NAME: 'hrnet'
