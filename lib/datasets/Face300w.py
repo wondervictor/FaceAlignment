@@ -25,9 +25,9 @@ class Face300W(data.Dataset):
     def __init__(self, cfg, is_train=True, transform=None):
         # specify annotation file for dataset
         if is_train:
-            self.csv_file = cfg.DATASET.TRAIN_CSV
+            self.csv_file = cfg.DATASET.TRAIN_ANNOTATION
         else:
-            self.csv_file = cfg.DATASET.TEST_CSV
+            self.csv_file = cfg.DATASET.TEST_ANNOTATION
 
         self.is_train = is_train
         self.transform = transform
@@ -62,7 +62,7 @@ class Face300W(data.Dataset):
         # pts = torch.Tensor(pts.tolist())
 
         scale *= 1.25
-        nparts = pts.size(0)
+        nparts = pts.shape[0]
         img = np.array(Image.open(image_path).convert('RGB'))
 
         # transform !

@@ -41,6 +41,10 @@ def shufflelr(x, width, dataset='mpii'):
             [37, 46], [38, 45], [39, 44], [40, 43], [41, 48], [42, 47],
             [49, 55], [50, 54], [51, 53], [62, 64], [61, 65], [68, 66], [59, 57], [60, 56]
         )
+    elif dataset == 'cofw':
+        matched_parts = (
+            [1, 2], [5, 7], [3, 4], [6, 8], [9, 10], [11, 12], [13, 15], [17, 18], [14, 16], [19, 20], [23, 24]
+        )
     else:
         # print('Not supported dataset: ' + dataset)
         raise NotImplemented()
@@ -131,7 +135,7 @@ def get_transform(center, scale, res, rot=0):
     t[1, 2] = res[0] * (-float(center[1]) / h + .5)
     t[2, 2] = 1
     if not rot == 0:
-        rot = -rot # To match direction of rotation from cropping
+        rot = -rot  # To match direction of rotation from cropping
         rot_mat = np.zeros((3, 3))
         rot_rad = rot * np.pi / 180
         sn, cs = np.sin(rot_rad), np.cos(rot_rad)
@@ -144,7 +148,7 @@ def get_transform(center, scale, res, rot=0):
         t_mat[1, 2] = -res[0]/2
         t_inv = t_mat.copy()
         t_inv[:2, 2] *= -1
-        t = np.dot(t_inv, np.dot(rot_mat,np.dot(t_mat,t)))
+        t = np.dot(t_inv, np.dot(rot_mat, np.dot(t_mat, t)))
     return t
 
 
@@ -156,6 +160,15 @@ def transform_pixel(pt, center, scale, res, invert=0, rot=0):
     new_pt = np.array([pt[0] - 1, pt[1] - 1, 1.]).T
     new_pt = np.dot(t, new_pt)
     return new_pt[:2].astype(int) + 1
+
+
+def transform_preds(coords, center, scale, res):
+    # size = coords.size()
+    # coords = coords.view(-1, coords.size(-1))
+    # print(coords.size())
+    for p in range(coords.size(0)):
+        coords[p, 0:2] = transform_pixel(coords[p, 0:2], center, scale, res, 1, 0)
+    return coords
 
 
 def crop(img, center, scale, res, rot=0):

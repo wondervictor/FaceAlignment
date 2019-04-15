@@ -1,8 +1,7 @@
 # ------------------------------------------------------------------------------
 # Copyright (c) Microsoft
 # Licensed under the MIT License.
-# Create by Bin Xiao (Bin.Xiao@microsoft.com)
-# Modified by Tianheng Cheng(tianhengcheng@gmail.com)
+# Created by Tianheng Cheng(tianhengcheng@gmail.com)
 # ------------------------------------------------------------------------------
 
 from __future__ import absolute_import
@@ -88,7 +87,25 @@ def train(config, train_loader, model, critertion, optimizer,
         end = time.time()
 
 
+def validate(config, val_loader, model, criterion, output_dir,
+             tb_log_dir, writer_dict):
+
+    batch_time = AverageMeter()
+    losses = AverageMeter()
+    top1 = AverageMeter()
+    top5 = AverageMeter()
+
+    model.eval()
+
+    with torch.no_grad():
+        end = time.time()
+        for i, (inp, target) in enumerate(val_loader):
+
+            output = model(inp)
+            target = target.cuda(non_blocking=True)
 
 
+
+    pass
 
 
