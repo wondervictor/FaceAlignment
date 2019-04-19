@@ -11,6 +11,40 @@ import scipy
 import numpy as np
 
 
+# TODO: remove
+def fliplr(x):
+    if x.ndim == 3:
+        x = np.transpose(np.fliplr(np.transpose(x, (0, 2, 1))), (0, 2, 1))
+    elif x.ndim == 4:
+        for i in range(x.shape[0]):
+            x[i] = np.transpose(np.fliplr(np.transpose(x[i], (0, 2, 1))), (0, 2, 1))
+    return x.astype(float)
+
+
+def flip_back(flip_output, dataset='mpii'):
+    """
+    flip output map
+    """
+    if dataset == 'mpii':
+        matched_parts = (
+            [0, ],   [1, 4],   [2, 3],
+            [10, 15], [11, 14], [12, 13]
+        )
+    else:
+        print('Not supported dataset: ' + dataset)
+
+    # flip output horizontally
+    flip_output = fliplr(flip_output.numpy())
+
+    # Change left-right parts
+    for pair in matched_parts:
+        tmp = np.copy(flip_output[:, pair[0], :, :])
+        flip_output[:, pair[0], :, :] = flip_output[:, pair[1], :, :]
+        flip_output[:, pair[1], :, :] = tmp
+
+    return torch.from_numpy(flip_output).float()
+
+
 def shufflelr(x, width, dataset='mpii'):
     """
     flip coords
@@ -261,7 +295,6 @@ def get_labelmap(img, pt, sigma, label_type='Gaussian'):
 
     img[img_y[0]:img_y[1], img_x[0]:img_x[1]] = g[g_y[0]:g_y[1], g_x[0]:g_x[1]]
     return img
-
 
 
 # def fliplr(x):
