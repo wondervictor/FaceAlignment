@@ -1,8 +1,7 @@
 # ------------------------------------------------------------------------------
 # Copyright (c) Microsoft
 # Licensed under the MIT License.
-# Create by Bin Xiao (Bin.Xiao@microsoft.com)
-# Modified by Tianheng Cheng(tianhengcheng@gmail.com)
+# Created by Tianheng Cheng(tianhengcheng@gmail.com)
 # ------------------------------------------------------------------------------
 
 import os
@@ -40,7 +39,8 @@ def main():
 
     args = parse_args()
 
-    logger, final_output_dir, tb_log_dir = utils.create_logger(config, args.cfg, 'train')
+    logger, final_output_dir, tb_log_dir = \
+        utils.create_logger(config, args.cfg, 'train')
 
     logger.info(pprint.pformat(args))
     logger.info(pprint.pformat(config))
@@ -65,22 +65,31 @@ def main():
     criterion = torch.nn.MSELoss(size_average=True).cuda()
 
     optimizer = utils.get_optimizer(config, model)
-
+    best_nme = 0
     last_epoch = config.TRAIN.BEGIN_EPOCH
     if config.TRAIN.RESUME:
         model_state_file = os.path.join(final_output_dir,
                                         'checkpoint.pth')
         if os.path.exists(model_state_file):
             checkpoint = torch.load(model_state_file)
-            # What to save and what to load
+            last_epoch = checkpoint['epoch']
+            best_nme = checkpoint['best_nme']
+            model.load_state_dict(checkpoint['state_dict'])
+            optimizer.load_state_dict(checkpoint['optimizer'])
+            print("=> loaded checkpoint '{}' (epoch {})"
+                  .format(args.resume, checkpoint['epoch']))
+        else:
+            print("=> no checkpoint found at '{}'".format(args.resume))
 
     if isinstance(config.TRAIN.LR_STEP, list):
         lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
-            optimizer, config.TRAIN.LR_STEP, config.TRAIN.LR_FACTOR, last_epoch=-1
+            optimizer, config.TRAIN.LR_STEP,
+            config.TRAIN.LR_FACTOR, last_epoch-1
         )
     else:
         lr_scheduler = torch.optim.lr_scheduler.StepLR(
-            optimizer, config.TRAIN.LR_STEP, config.TRAIN.LR_FACTOR, last_epoch=-1
+            optimizer, config.TRAIN.LR_STEP,
+            config.TRAIN.LR_FACTOR, last_epoch-1
         )
 
     transform = transforms.Compose([
@@ -91,14 +100,18 @@ def main():
     dataset_type = get_dataset(config)
 
     train_loader = DataLoader(
-        dataset=dataset_type(config, is_train=True, transform=transform),
+        dataset=dataset_type(config,
+                             is_train=True,
+                             transform=transform),
         batch_size=config.TRAIN.BATCH_SIZE_PER_GPU*len(gpus),
         shuffle=True,
         num_workers=config.WORKERS,
         pin_memory=True)
 
     val_loader = DataLoader(
-        dataset=dataset_type(config, is_train=False, transform=transform),
+        dataset=dataset_type(config,
+                             is_train=False,
+                             transform=transform),
         batch_size=config.TEST.BATCH_SIZE_PER_GPU*len(gpus),
         shuffle=False,
         num_workers=config.WORKERS,
@@ -107,11 +120,32 @@ def main():
 
     for epoch in range(last_epoch, config.TRAIN.END_EPOCH):
         lr_scheduler.step()
-        function.train(config, train_loader, model, criterion, optimizer, epoch, writer_dict)
 
-        function.validate(config, val_loader, model, criterion, )
+        function.train(config, train_loader, model, criterion,
+                       optimizer, epoch, writer_dict)
 
+        # evaluate
+        predictions, nme = function.validate(config, val_loader, model,
+                                             criterion, epoch, writer_dict)
 
+        is_best = nme < best_nme
+        best_nme = min(nme, best_nme)
+
+        logger.info('=> saving checkpoint to {}'.format(final_output_dir))
+        utils.save_checkpoint(
+            {"state_dict": model.state_dict(),
+             "epoch": epoch + 1,
+             "nme": nme,
+             "best_nme": best_nme,
+             "optimizer": optimizer,
+             }, predictions, is_best, final_output_dir)
+
+    final_model_state_file = os.path.join(final_output_dir,
+                                          'final_state.pth.tar')
+    logger.info('saving final model state to {}'.format(
+        final_model_state_file))
+    torch.save(model.module.state_dict(), final_model_state_file)
+    writer_dict['writer'].close()
 
 
 

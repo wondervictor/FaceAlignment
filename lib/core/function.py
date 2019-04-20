@@ -94,79 +94,7 @@ def train(config, train_loader, model, critertion, optimizer,
         end = time.time()
 
 
-def validate(config, val_loader, model, criterion, output_dir,
-             tb_log_dir, writer_dict, debug=False):
-
-    batch_time = AverageMeter()
-    data_time = AverageMeter()
-
-    losses = AverageMeter()
-    acces = AverageMeter()
-
-    num_classes = config.MODEL.NUM_JOINTS
-    predictions = torch.zeros((len(val_loader.dataset), num_classes, 2))
-
-    model.eval()
-    flip = config.TEST.FLIP_TEST
-    nme_count = 0
-    nme_batch_sum = 0
-    gt_win, pred_win = None, None
-    with torch.no_grad():
-        end = time.time()
-        for i, (inp, target, meta) in enumerate(val_loader):
-            data_time.update(time.time() - end)
-            output = model(inp)
-            target = target.cuda(non_blocking=True)
-
-            score_map = output.data.cpu()
-
-            if flip:
-                # flip W
-                flip_input = torch.flip(inp, dim=[3])
-                flip_output = model(flip_input)
-                # [-1] ??
-                flip_output = flip_back(flip_output[-1].data.cpu())
-                score_map += flip_output
-            # loss
-            loss = criterion(output, target)
-
-            # accuracy
-            acc = accuracy(score_map, target.cpu(), i)
-            preds = decode_preds(score_map, meta['center'], meta['scale'], [64, 64])
-
-            # NME
-            nme_batch_sum = nme_batch_sum + compute_nme(preds, meta['pts'])
-            nme_count = nme_count + preds.size(0)
-
-            for n in range(score_map.size(0)):
-                predictions[meta['index'][n], :, :] = preds[n, :, :]
-
-            if debug:  # and epoch % args.display == 0
-                gt_batch_img = batch_with_heatmap(inp, target)
-                pred_batch_img = batch_with_heatmap(inp, score_map)
-                if not gt_win or not pred_win:
-                    plt.subplot(121)
-                    plt.title('Val-Groundtruth')
-                    gt_win = plt.imshow(gt_batch_img)
-                    plt.subplot(122)
-                    plt.title('Prediction')
-                    pred_win = plt.imshow(pred_batch_img)
-                else:
-                    gt_win.set_data(gt_batch_img)
-                    pred_win.set_data(pred_batch_img)
-                plt.pause(.05)
-                plt.draw()
-
-            losses.update(loss.item(), inp.size(0))
-            acces.update(acc.item(), inp.size(0))
-
-            batch_time.update(time.time()-end)
-            end = time.time()
-
-    return losses.avg, acces.avg, predictions, nme_batch_sum / nme_count
-
-
-def evaluate(config, val_loader, model, criterion, debug=False):
+def validate(config, val_loader, model, criterion, epoch, writer_dict, debug=False):
     batch_time = AverageMeter()
     data_time = AverageMeter()
 
@@ -246,13 +174,24 @@ def evaluate(config, val_loader, model, criterion, debug=False):
             batch_time.update(time.time() - end)
             end = time.time()
 
-    print("Evaluation Finished...")
-    print('count_failure_008 = ', count_failure_008)
-    print('count_failure_010 = ', count_failure_010)
-    print('nme_count = ', nme_count)
+    nme = nme_batch_sum / nme_count
+    failure_008_rate = count_failure_008 / nme_count
+    failure_010_rate = count_failure_010 / nme_count
 
-    return losses.avg, predictions, nme_batch_sum / nme_count, \
-        count_failure_008 / nme_count, count_failure_010 / nme_count
+    msg = 'Test Epoch {} time:{:.4f} loss:{:.4f} acc:{:.4f} nme:{:.4f} [008]:{:.4f} ' \
+          '[010]:{:.4f}'.format(epoch, batch_time.avg, losses.avg, acces.avg, nme,
+                                failure_008_rate, failure_010_rate)
+    logger.info(msg)
+
+    if writer_dict:
+        writer = writer_dict['writer']
+        global_steps = writer_dict['valid_global_steps']
+        writer.add_scalar('valid_loss', losses.avg, global_steps)
+        writer.add_scalar('valid_nme', nme, global_steps)
+        writer.add_scalar('valid_acc', acces.avg, global_steps)
+        writer_dict['valid_global_steps'] = global_steps + 1
+
+    return nme, predictions
 
 
 
