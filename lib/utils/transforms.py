@@ -89,7 +89,7 @@ def shufflelr(x, width, dataset='mpii'):
 
     # Change left-right parts
     for pair in matched_parts:
-        tmp = x[pair[0]-1, :].clone()
+        tmp = x[pair[0]-1, :].copy()
         x[pair[0]-1, :] = x[pair[1]-1, :]
         x[pair[1]-1, :] = tmp
 

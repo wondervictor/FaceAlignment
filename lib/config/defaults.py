@@ -9,8 +9,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import os
-
 from yacs.config import CfgNode as CN
 
 
@@ -86,16 +84,11 @@ _C.DATASET.DATASET = 'AFLW'
 _C.DATASET.TRAIN_ANNOTATION = ''
 _C.DATASET.TEST_ANNOTATION = ''
 _C.DATASET.DATA_FORMAT = 'jpg'
-_C.DATASET.HYBRID_JOINTS_TYPE = ''
-_C.DATASET.SELECT_DATA = False
 
 # training data augmentation
 _C.DATASET.FLIP = True
 _C.DATASET.SCALE_FACTOR = 0.25
 _C.DATASET.ROT_FACTOR = 30
-_C.DATASET.PROB_HALF_BODY = 0.0
-_C.DATASET.NUM_JOINTS_HALF_BODY = 8
-_C.DATASET.COLOR_RGB = False
 
 # train
 _C.TRAIN = CN()
@@ -130,32 +123,11 @@ _C.TEST.FLIP_TEST = False
 _C.TEST.POST_PROCESS = False
 _C.TEST.SHIFT_HEATMAP = False
 
-_C.TEST.USE_GT_BBOX = False
-
-# nms
-_C.TEST.IMAGE_THRE = 0.1
-_C.TEST.NMS_THRE = 0.6
-_C.TEST.SOFT_NMS = False
-_C.TEST.OKS_THRE = 0.5
-_C.TEST.IN_VIS_THRE = 0.0
-_C.TEST.COCO_BBOX_FILE = ''
-_C.TEST.BBOX_THRE = 1.0
-_C.TEST.MODEL_FILE = ''
-
-# debug
-_C.DEBUG = CN()
-_C.DEBUG.DEBUG = False
-_C.DEBUG.SAVE_BATCH_IMAGES_GT = False
-_C.DEBUG.SAVE_BATCH_IMAGES_PRED = False
-_C.DEBUG.SAVE_HEATMAPS_GT = False
-_C.DEBUG.SAVE_HEATMAPS_PRED = False
-
 
 def update_config(cfg, args):
     cfg.defrost()
     cfg.merge_from_file(args.cfg)
     cfg.merge_from_list(args.opts)
-
     cfg.freeze()
 
 

@@ -12,7 +12,6 @@ import time
 import logging
 
 import torch
-import torch.nn.functional as F
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
