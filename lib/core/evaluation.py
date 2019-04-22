@@ -81,8 +81,9 @@ def accuracy(output, target, idxs, thr=0.5):
     return acc
 
 
-def compute_nme(preds, targets):
+def compute_nme(preds, meta):
 
+    targets = meta['pts']
     preds = preds.numpy()
     target = targets.cpu().numpy()
 
@@ -93,8 +94,8 @@ def compute_nme(preds, targets):
     for i in range(N):
         pts_pred, pts_gt = preds[i, ], target[i, ]
         if L == 19:  # aflw
-            pass
-        if L == 29:  # cofw
+            interocular = meta['box_size'][i]
+        elif L == 29:  # cofw
             interocular = np.linalg.norm(pts_gt[8, ] - pts_gt[9, ])
         elif L == 68:  # 300w
             # interocular

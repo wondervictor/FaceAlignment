@@ -52,8 +52,12 @@ def train(config, train_loader, model, critertion, optimizer,
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
+    acces = AverageMeter()
 
     model.train()
+    nme_count = 0
+    nme_batch_sum = 0
+
     end = time.time()
 
     for i, (inp, target, meta) in enumerate(train_loader):
@@ -66,12 +70,21 @@ def train(config, train_loader, model, critertion, optimizer,
 
         loss = critertion(output, target)
 
+        # NME and accuracy
+        score_map = output.data.cpu()
+        acc = accuracy(score_map, target, [1])
+        preds = decode_preds(score_map, meta['center'], meta['scale'], [64, 64])
+
+        nme_batch_sum = nme_batch_sum + compute_nme(preds, meta)
+        nme_count = nme_count + preds.size(0)
+
         # optimzie
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
         losses.update(loss.itme(), inp.size(0))
+        acces.update(acc[0], inp.size(0))
 
         batch_time.update(time.time()-end)
         if i % config.PRINT_FREQ == 0:
@@ -79,19 +92,25 @@ def train(config, train_loader, model, critertion, optimizer,
                   'Time {batch_time.val:.3f}s ({batch_time.avg:.3f}s)\t' \
                   'Speed {speed:.1f} samples/s\t' \
                   'Data {data_time.val:.3f}s ({data_time.avg:.3f}s)\t' \
-                  'Loss {loss.val:.5f} ({loss.avg:.5f})\t'.format(
+                  'Loss {loss.val:.5f} ({loss.avg:.5f})\t' \
+                  'Accuracy {acc.val:.5f} ({acc.avg:.5f})'.format(
                       epoch, i, len(train_loader), batch_time=batch_time,
                       speed=inp.size(0)/batch_time.val,
-                      data_time=data_time, loss=losses)
+                      data_time=data_time, loss=losses, acc=acces)
             logger.info(msg)
 
             if writer_dict:
                 writer = writer_dict['writer']
                 global_steps = writer_dict['train_global_steps']
                 writer.add_scalar('train_loss', losses.val, global_steps)
+                writer.add_scalar('train_acc', acces.val, global_steps)
                 writer_dict['train_global_steps'] = global_steps + 1
 
         end = time.time()
+    nme = nme_batch_sum / nme_count
+    msg = 'Train Epoch {} time:{:.4f} loss:{:.4f} acc:{:.4f} nme:{:.4f}'\
+        .format(epoch, batch_time.avg, losses.avg, acces.avg, nme)
+    logger.info(msg)
 
 
 def validate(config, val_loader, model, criterion, epoch, writer_dict, debug=False):
@@ -133,11 +152,11 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict, debug=Fal
             loss = criterion(output, target)
 
             # accuracy
-            acc = accuracy(score_map, target.cpu(), i)
+            acc = accuracy(score_map, target.cpu(), [1])
             preds = decode_preds(score_map, meta['center'], meta['scale'], [64, 64])
 
             # NME
-            nme_temp = compute_nme(preds, meta['pts'])
+            nme_temp = compute_nme(preds, meta)
 
             if nme_temp > 0.08:
                 count_failure_008 += 1

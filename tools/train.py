@@ -148,7 +148,8 @@ def main():
     writer_dict['writer'].close()
 
 
-
+if __name__ == '__main__':
+    main()
 
 
 

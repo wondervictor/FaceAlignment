@@ -11,9 +11,7 @@ from __future__ import print_function
 
 import os
 import logging
-import functools
 
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -479,7 +477,7 @@ class HighResolutionNet(nn.Module):
 
 def get_face_alignment_net(config, **kwargs):
 
-    model = HighResolutionNet(config, kwargs)
+    model = HighResolutionNet(config, **kwargs)
     model.init_weights()
 
     return model

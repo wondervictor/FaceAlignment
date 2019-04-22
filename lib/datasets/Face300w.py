@@ -51,13 +51,12 @@ class Face300W(data.Dataset):
         image_path = os.path.join(self.data_root,
                                   self.landmarks_frame.iloc[idx, 0])
         scale = self.landmarks_frame.iloc[idx, 1]
-        box_size = self.landmarks_frame.iloc[idx, 2]
 
-        center_w = self.landmarks_frame.iloc[idx, 3]
-        center_h = self.landmarks_frame.iloc[idx, 4]
+        center_w = self.landmarks_frame.iloc[idx, 2]
+        center_h = self.landmarks_frame.iloc[idx, 3]
         center = torch.Tensor([center_w, center_h])
 
-        pts = self.landmarks_frame.iloc[idx, 5:].values
+        pts = self.landmarks_frame.iloc[idx, 4:].values
         pts = pts.astype('float').reshape(-1, 2)
         # pts = torch.Tensor(pts.tolist())
 
@@ -78,7 +77,7 @@ class Face300W(data.Dataset):
                 img = np.fliplr(img)
                 pts = shufflelr(pts, width=img.shape[1], dataset='aflw')
                 center[0] = img.shape[1] - center[0]
-                center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 3]
+                # center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 3]
 
         img = crop(img, center, scale, self.input_size, rot=r)
 
@@ -98,7 +97,7 @@ class Face300W(data.Dataset):
         center = torch.Tensor(center)
 
         meta = {'index': idx, 'center': center, 'scale': scale,
-                'pts': torch.Tensor(pts), 'tpts': tpts, 'box_size': box_size}
+                'pts': torch.Tensor(pts), 'tpts': tpts,}
 
         return img, target, meta
 

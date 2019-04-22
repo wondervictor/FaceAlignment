@@ -78,7 +78,7 @@ class WFLW(data.Dataset):
                 img = np.fliplr(img)
                 pts = shufflelr(pts, width=img.shape[1], dataset='wflw')
                 center[0] = img.shape[1] - center[0]
-                center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 2]
+                # center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 2]
 
         img = crop(img, center, scale, self.input_size, rot=r)
 

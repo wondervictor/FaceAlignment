@@ -31,7 +31,8 @@ def flip_back(flip_output, dataset='mpii'):
             [10, 15], [11, 14], [12, 13]
         )
     else:
-        print('Not supported dataset: ' + dataset)
+        raise NotImplemented('Not supported dataset: ' + dataset)
+        # print('Not supported dataset: ' + dataset)
 
     # flip output horizontally
     flip_output = fliplr(flip_output.numpy())
