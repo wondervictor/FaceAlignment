@@ -113,7 +113,7 @@ def train(config, train_loader, model, critertion, optimizer,
     logger.info(msg)
 
 
-def validate(config, val_loader, model, criterion, epoch, writer_dict, debug=False):
+def validate(config, val_loader, model, criterion, epoch, writer_dict):
     batch_time = AverageMeter()
     data_time = AverageMeter()
 
@@ -129,7 +129,7 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict, debug=Fal
     nme_batch_sum = 0
     count_failure_008 = 0
     count_failure_010 = 0
-    gt_win, pred_win = None, None
+    # gt_win, pred_win = None, None
     end = time.time()
     flip = config.TEST.FLIP_TEST
 
@@ -169,21 +169,21 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict, debug=Fal
             for n in range(score_map.size(0)):
                 predictions[meta['index'][n], :, :] = preds[n, :, :]
 
-            if debug:  # and epoch % args.display == 0
-                gt_batch_img = batch_with_heatmap(inp, target)
-                pred_batch_img = batch_with_heatmap(inp, score_map)
-                if not gt_win or not pred_win:
-                    plt.subplot(121)
-                    plt.title('Val-Groundtruth')
-                    gt_win = plt.imshow(gt_batch_img)
-                    plt.subplot(122)
-                    plt.title('Prediction')
-                    pred_win = plt.imshow(pred_batch_img)
-                else:
-                    gt_win.set_data(gt_batch_img)
-                    pred_win.set_data(pred_batch_img)
-                plt.pause(.05)
-                plt.draw()
+            # if debug:  # and epoch % args.display == 0
+            #     gt_batch_img = batch_with_heatmap(inp, target)
+            #     pred_batch_img = batch_with_heatmap(inp, score_map)
+            #     if not gt_win or not pred_win:
+            #         plt.subplot(121)
+            #         plt.title('Val-Groundtruth')
+            #         gt_win = plt.imshow(gt_batch_img)
+            #         plt.subplot(122)
+            #         plt.title('Prediction')
+            #         pred_win = plt.imshow(pred_batch_img)
+            #     else:
+            #         gt_win.set_data(gt_batch_img)
+            #         pred_win.set_data(pred_batch_img)
+            #     plt.pause(.05)
+            #     plt.draw()
 
             # measure accuracy and record loss
             losses.update(loss.item(), inp.size(0))
@@ -209,6 +209,90 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict, debug=Fal
         writer.add_scalar('valid_nme', nme, global_steps)
         writer.add_scalar('valid_acc', acces.avg, global_steps)
         writer_dict['valid_global_steps'] = global_steps + 1
+
+    return nme, predictions
+
+
+def inference(config, data_loader, model, debug=False):
+    batch_time = AverageMeter()
+    data_time = AverageMeter()
+    losses = AverageMeter()
+    acces = AverageMeter()
+
+    num_classes = config.MODEL.NUM_JOINTS
+    predictions = torch.zeros((len(data_loader.dataset), num_classes, 2))
+
+    model.eval()
+
+    nme_count = 0
+    nme_batch_sum = 0
+    count_failure_008 = 0
+    count_failure_010 = 0
+    gt_win, pred_win = None, None
+    end = time.time()
+    flip = config.TEST.FLIP_TEST
+
+    with torch.no_grad():
+        for i, (inp, target, meta) in enumerate(data_loader):
+            data_time.update(time.time() - end)
+            output = model(inp)
+            target = target.cuda(non_blocking=True)
+
+            score_map = output.data.cpu()
+            if flip:
+                # flip W
+                flip_input = torch.flip(inp, dim=[3])
+                flip_output = model(flip_input)
+                # [-1] ??
+                flip_output = flip_back(flip_output[-1].data.cpu())
+                score_map += flip_output
+            # accuracy
+            acc = accuracy(score_map, target.cpu(), [1])
+            preds = decode_preds(score_map, meta['center'], meta['scale'], [64, 64])
+
+            # NME
+            nme_temp = compute_nme(preds, meta)
+
+            if nme_temp > 0.08:
+                count_failure_008 += 1
+
+            if nme_temp > 0.10:
+                count_failure_010 += 1
+
+            nme_batch_sum += nme_temp
+            nme_count = nme_count + preds.size(0)
+            for n in range(score_map.size(0)):
+                predictions[meta['index'][n], :, :] = preds[n, :, :]
+
+            if debug:  # and epoch % args.display == 0
+                gt_batch_img = batch_with_heatmap(inp, target)
+                pred_batch_img = batch_with_heatmap(inp, score_map)
+                if not gt_win or not pred_win:
+                    plt.subplot(121)
+                    plt.title('Val-Groundtruth')
+                    gt_win = plt.imshow(gt_batch_img)
+                    plt.subplot(122)
+                    plt.title('Prediction')
+                    pred_win = plt.imshow(pred_batch_img)
+                else:
+                    gt_win.set_data(gt_batch_img)
+                    pred_win.set_data(pred_batch_img)
+                plt.pause(.05)
+                plt.draw()
+
+            acces.update(acc[0], inp.size(0))
+            # measure elapsed time
+            batch_time.update(time.time() - end)
+            end = time.time()
+
+    nme = nme_batch_sum / nme_count
+    failure_008_rate = count_failure_008 / nme_count
+    failure_010_rate = count_failure_010 / nme_count
+
+    msg = 'Test Results time:{:.4f} loss:{:.4f} acc:{:.4f} nme:{:.4f} [008]:{:.4f} ' \
+          '[010]:{:.4f}'.format(batch_time.avg, losses.avg, acces.avg, nme,
+                                failure_008_rate, failure_010_rate)
+    logger.info(msg)
 
     return nme, predictions
 
