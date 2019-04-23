@@ -473,7 +473,7 @@ class HighResolutionNet(nn.Module):
 def get_face_alignment_net(config, **kwargs):
 
     model = HighResolutionNet(config, **kwargs)
-    model.init_weights()
+    model.init_weights(pretrained=config.MODEL.PRETRAINED)
 
     return model
 
