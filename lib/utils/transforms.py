@@ -8,6 +8,7 @@
 import cv2
 import torch
 import scipy
+import scipy.misc
 import numpy as np
 
 
@@ -202,7 +203,7 @@ def transform_preds(coords, center, scale, res):
     # coords = coords.view(-1, coords.size(-1))
     # print(coords.size())
     for p in range(coords.size(0)):
-        coords[p, 0:2] = transform_pixel(coords[p, 0:2], center, scale, res, 1, 0)
+        coords[p, 0:2] = torch.tensor(transform_pixel(coords[p, 0:2], center, scale, res, 1, 0))
     return coords
 
 

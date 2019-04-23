@@ -71,7 +71,7 @@ def train(config, train_loader, model, critertion, optimizer,
 
         # NME and accuracy
         score_map = output.data.cpu()
-        acc = accuracy(score_map, target, [1])
+        acc = accuracy(score_map, target.cpu(), [1])
         preds = decode_preds(score_map, meta['center'], meta['scale'], [64, 64])
 
         nme_batch_sum = nme_batch_sum + compute_nme(preds, meta)
@@ -82,7 +82,7 @@ def train(config, train_loader, model, critertion, optimizer,
         loss.backward()
         optimizer.step()
 
-        losses.update(loss.itme(), inp.size(0))
+        losses.update(loss.item(), inp.size(0))
         acces.update(acc[0], inp.size(0))
 
         batch_time.update(time.time()-end)

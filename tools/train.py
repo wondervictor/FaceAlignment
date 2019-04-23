@@ -15,7 +15,9 @@ import torch.backends.cudnn as cudnn
 from tensorboardX import SummaryWriter
 from torchvision import transforms
 from torch.utils.data import DataLoader
-
+import sys
+# sys.path.append('..')
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import lib.models as models
 from lib.config import config, update_config
 from lib.utils import utils
@@ -46,8 +48,8 @@ def main():
     logger.info(pprint.pformat(config))
 
     cudnn.benchmark = config.CUDNN.BENCHMARK
-    cudnn.backends.cudnn.determinstic = config.CUDNN.DETERMINSTIC
-    cudnn.backends.cudnn.enabled = config.CUDNN.ENABLED
+    cudnn.determinstic = config.CUDNN.DETERMINISTIC
+    cudnn.enabled = config.CUDNN.ENABLED
 
     model = models.get_face_alignment_net(config)
 
@@ -76,10 +78,10 @@ def main():
             best_nme = checkpoint['best_nme']
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
-            print("=> loaded checkpoint '{}' (epoch {})"
-                  .format(args.resume, checkpoint['epoch']))
+            print("=> loaded checkpoint (epoch {})"
+                  .format(checkpoint['epoch']))
         else:
-            print("=> no checkpoint found at '{}'".format(args.resume))
+            print("=> no checkpoint found")
 
     if isinstance(config.TRAIN.LR_STEP, list):
         lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(
@@ -125,7 +127,7 @@ def main():
                        optimizer, epoch, writer_dict)
 
         # evaluate
-        predictions, nme = function.validate(config, val_loader, model,
+        nme, predictions = function.validate(config, val_loader, model,
                                              criterion, epoch, writer_dict)
 
         is_best = nme < best_nme

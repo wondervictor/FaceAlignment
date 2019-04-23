@@ -127,7 +127,7 @@ _C.TEST.SHIFT_HEATMAP = False
 def update_config(cfg, args):
     cfg.defrost()
     cfg.merge_from_file(args.cfg)
-    cfg.merge_from_list(args.opts)
+    # cfg.merge_from_list(args.opts)
     cfg.freeze()
 
 

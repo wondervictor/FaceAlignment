@@ -83,7 +83,7 @@ def get_optimizer(cfg, model):
 
 def save_checkpoint(states, predictions, is_best,
                     output_dir, filename='checkpoint.pth'):
-    preds = predictions.cpu.data.numpy()
+    preds = predictions.cpu().data.numpy()
     torch.save(states, os.path.join(output_dir, filename))
     torch.save(preds, os.path.join(output_dir, 'current_pred.pth'))
 

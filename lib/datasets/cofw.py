@@ -8,8 +8,8 @@ import torch.utils.data as data
 import pandas as pd
 from PIL import Image
 import numpy as np
-from scipy.io import loadmat
 
+from hdf5storage import loadmat
 from ..utils.transforms import shufflelr, crop, get_labelmap, transform_pixel
 
 
@@ -98,7 +98,7 @@ class COFW(data.Dataset):
         img = crop(img, center, scale, self.input_size, rot=r)
 
         target = np.zeros((nparts, self.output_size[0], self.output_size[1]))
-        tpts = pts.clone()
+        tpts = pts.copy()
 
         for i in range(nparts):
             if tpts[i, 1] > 0:
