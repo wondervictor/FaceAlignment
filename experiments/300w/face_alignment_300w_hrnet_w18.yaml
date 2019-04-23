@@ -5,9 +5,9 @@ PRINT_FREQ: 100
 
 DATASET:
   DATASET: 300W
-  ROOT: '/hdfs/resrchvc/v-tich/300w/'
-  TRAIN_ANNOTATION: 'face_landmarks_300w_train.csv'
-  TEST_ANNOTATION: 'face_landmarks_300w_valid.csv'
+  ROOT: '/hdfs/resrchvc/v-tich/FaceAlignment/data/300w/images/'
+  TRAIN_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/300w/face_landmarks_300w_train.csv'
+  TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/300w/face_landmarks_300w_valid.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
