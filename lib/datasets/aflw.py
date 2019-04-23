@@ -84,7 +84,7 @@ class AFLW(data.Dataset):
         img = crop(img, center, scale, self.input_size, rot=r)
 
         target = np.zeros((nparts, self.output_size[0], self.output_size[1]))
-        tpts = pts.clone()
+        tpts = pts.copy()
 
         for i in range(nparts):
             if tpts[i, 1] > 0:
