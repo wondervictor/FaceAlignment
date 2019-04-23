@@ -4,10 +4,10 @@ WORKERS: 4
 PRINT_FREQ: 100
 
 DATASET:
-  DATASET: AFLW
-  ROOT: '/hdfs/resrchvc/v-tich/alfw/'
-  TRAIN_ANNOTATION: ''
-  TEST_ANNOTATION: ''
+  DATASET: 300W
+  ROOT: '/hdfs/resrchvc/v-tich/300w/'
+  TRAIN_ANNOTATION: 'face_landmarks_300w_train.csv'
+  TEST_ANNOTATION: 'face_landmarks_300w_valid.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
