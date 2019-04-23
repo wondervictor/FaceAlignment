@@ -16,7 +16,6 @@ from tensorboardX import SummaryWriter
 from torchvision import transforms
 from torch.utils.data import DataLoader
 import sys
-# sys.path.append('..')
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import lib.models as models
 from lib.config import config, update_config

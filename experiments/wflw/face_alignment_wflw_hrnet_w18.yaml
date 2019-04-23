@@ -1,13 +1,12 @@
-GPUS: '0,1,2,3'
-
+GPUS: (0,)
 WORKERS: 4
 PRINT_FREQ: 100
 
 DATASET:
   DATASET: WFLW
-  ROOT: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wlfw/images'
-  TRAIN_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wlfw/face_landmarks_wflw_train.csv'
-  TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wlfw/face_landmarks_wflw_test.csv'
+  ROOT: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wflw/images'
+  TRAIN_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wflw/face_landmarks_wflw_train.csv'
+  TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wflw/face_landmarks_wflw_test.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
@@ -65,14 +64,8 @@ MODEL:
         - 72
         - 144
       FUSE_METHOD: SUM
-LOSS:
-  USE_OHEM: false
-  OHEMTHRES: 0.7
-  OHEMKEEP: 131072
-  CLASS_BALANCE: false
-  IGNORE_LABEL: -1
 TRAIN:
-  BATCH_SIZE: 16
+  BATCH_SIZE_PER_GPU: 16
   SHUFFLE: true
   BEGIN_EPOCH: 0
   END_EPOCH: 60
@@ -84,7 +77,5 @@ TRAIN:
   MOMENTUM: 0.0
   NESTEROV: false
 TEST:
-  BATCH_SIZE: 8
+  BATCH_SIZE_PER_GPU: 8
   FLIP_TEST: false
-  MULTI_SCALE: false
-  MODEL_FILE: ''

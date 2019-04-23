@@ -13,7 +13,8 @@ import torch.nn as nn
 import torch.backends.cudnn as cudnn
 from torchvision import transforms
 from torch.utils.data import DataLoader
-
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import lib.models as models
 from lib.config import config, update_config
 from lib.utils import utils
