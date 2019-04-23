@@ -4,17 +4,17 @@ WORKERS: 4
 PRINT_FREQ: 100
 
 DATASET:
-  DATASET: 300W
-  ROOT: '/hdfs/resrchvc/v-tich/300w/'
-  TRAIN_ANNOTATION: 'face_landmarks_300w_train.csv'
-  TEST_ANNOTATION: 'face_landmarks_300w_valid.csv'
+  DATASET: COFW
+  ROOT: '/hdfs/resrchvc/v-tich/FaceAlignment/data'
+  TRAIN_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/cofw/COFW_train_color.mat'
+  TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/cofw/COFW_test_color.mat'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
 
 MODEL:
   NAME: 'hrnet'
-  NUM_JOINTS: 19
+  NUM_JOINTS: 29
   INIT_WEIGHTS: true
   PRETRAINED: 'hrnetv2_pretrained/hrnetv2_w18_imagenet_pretrained.pth'
   SIGMA: 1

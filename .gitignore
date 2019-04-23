@@ -109,3 +109,4 @@ data
 .idea
 .DS_Store
 hrnetv2_pretrained/
+output

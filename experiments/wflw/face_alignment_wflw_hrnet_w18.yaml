@@ -4,17 +4,17 @@ WORKERS: 4
 PRINT_FREQ: 100
 
 DATASET:
-  DATASET: AFLW
-  ROOT: '/hdfs/resrchvc/v-tich/alfw/'
-  TRAIN_ANNOTATION: ''
-  TEST_ANNOTATION: ''
+  DATASET: WFLW
+  ROOT: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wlfw/images'
+  TRAIN_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wlfw/face_landmarks_wflw_train.csv'
+  TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/wlfw/face_landmarks_wflw_test.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
 
 MODEL:
   NAME: 'hrnet'
-  NUM_JOINTS: 19
+  NUM_JOINTS: 98
   INIT_WEIGHTS: true
   PRETRAINED: 'hrnetv2_pretrained/hrnetv2_w18_imagenet_pretrained.pth'
   SIGMA: 1

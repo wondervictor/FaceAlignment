@@ -14,7 +14,7 @@ DATASET:
 
 MODEL:
   NAME: 'hrnet'
-  NUM_JOINTS: 19
+  NUM_JOINTS: 68
   INIT_WEIGHTS: true
   PRETRAINED: 'hrnetv2_pretrained/hrnetv2_w18_imagenet_pretrained.pth'
   SIGMA: 1
