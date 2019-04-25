@@ -13,7 +13,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
 from tensorboardX import SummaryWriter
-from torchvision import transforms
 from torch.utils.data import DataLoader
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -92,22 +91,15 @@ def main():
             optimizer, config.TRAIN.LR_STEP,
             config.TRAIN.LR_FACTOR, last_epoch-1
         )
-    """
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225]),
-    ])
-    """
     dataset_type = get_dataset(config)
 
     train_loader = DataLoader(
         dataset=dataset_type(config,
                              is_train=True),
         batch_size=config.TRAIN.BATCH_SIZE_PER_GPU*len(gpus),
-        shuffle=True,
+        shuffle=config.TRAIN.SHUFFLE,
         num_workers=config.WORKERS,
-        pin_memory=True)
+        pin_memory=config.PIN_MEMORY)
 
     val_loader = DataLoader(
         dataset=dataset_type(config,
@@ -115,7 +107,7 @@ def main():
         batch_size=config.TEST.BATCH_SIZE_PER_GPU*len(gpus),
         shuffle=False,
         num_workers=config.WORKERS,
-        pin_memory=True
+        pin_memory=config.PIN_MEMORY
     )
 
     for epoch in range(last_epoch, config.TRAIN.END_EPOCH):
@@ -137,7 +129,7 @@ def main():
              "epoch": epoch + 1,
              "nme": nme,
              "best_nme": best_nme,
-             "optimizer": optimizer,
+             "optimizer": optimizer.state_dict(),
              }, predictions, is_best, final_output_dir)
 
     final_model_state_file = os.path.join(final_output_dir,

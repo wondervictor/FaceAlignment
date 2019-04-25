@@ -77,7 +77,7 @@ def train(config, train_loader, model, critertion, optimizer,
         nme_batch_sum = nme_batch_sum + compute_nme(preds, meta)
         nme_count = nme_count + preds.size(0)
 
-        # optimzie
+        # optimize
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()

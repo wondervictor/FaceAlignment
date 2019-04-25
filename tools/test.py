@@ -11,7 +11,6 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
-from torchvision import transforms
 from torch.utils.data import DataLoader
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -49,8 +48,8 @@ def main():
     logger.info(pprint.pformat(config))
 
     cudnn.benchmark = config.CUDNN.BENCHMARK
-    cudnn.backends.cudnn.determinstic = config.CUDNN.DETERMINSTIC
-    cudnn.backends.cudnn.enabled = config.CUDNN.ENABLED
+    cudnn.determinstic = config.CUDNN.DETERMINISTIC
+    cudnn.enabled = config.CUDNN.ENABLED
 
     model = models.get_face_alignment_net(config)
 
@@ -61,23 +60,17 @@ def main():
     state_dict = torch.load(args.model_file)
     if 'state_dict' in state_dict.keys():
         state_dict = state_dict['state_dict']
-    model.load_state_dict(state_dict)
+    model.modules.load_state_dict(state_dict)
 
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225]),
-    ])
     dataset_type = get_dataset(config)
 
     test_loader = DataLoader(
         dataset=dataset_type(config,
-                             is_train=False,
-                             transform=transform),
+                             is_train=False),
         batch_size=config.TEST.BATCH_SIZE_PER_GPU*len(gpus),
         shuffle=False,
         num_workers=config.WORKERS,
-        pin_memory=True
+        pin_memory=config.PIN_MEMORY
     )
 
     nme, predictions = function.inference(config, test_loader, model, args.debug)
