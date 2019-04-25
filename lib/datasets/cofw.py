@@ -109,8 +109,8 @@ class COFW(data.Dataset):
                                                scale, self.output_size, rot=r)
                 target[i] = get_labelmap(target[i], tpts[i]-1, self.sigma,
                                          label_type=self.label_type)
-
-        img = (img/255.0 - self.mean) / self.std
+        img = img.astype(np.float32)
+        img = (img/255 - self.mean) / self.std
         img = img.transpose([2, 0, 1])
         # img = self.transform(img)
         target = torch.Tensor(target)

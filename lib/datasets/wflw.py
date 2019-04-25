@@ -94,7 +94,7 @@ class WFLW(data.Dataset):
                                                scale, self.output_size, rot=r)
                 target[i] = get_labelmap(target[i], tpts[i]-1, self.sigma,
                                          label_type=self.label_type)
-
+        img = img.astype(np.float32)
         img = (img/255.0 - self.mean) / self.std
         img = img.transpose([2, 0, 1])
         target = torch.Tensor(target)
