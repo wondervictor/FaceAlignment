@@ -14,6 +14,7 @@ import logging
 import torch
 import matplotlib
 matplotlib.use('Agg')
+import numpy as np
 import matplotlib.pyplot as plt
 
 from ..utils.transforms import flip_back
@@ -74,7 +75,8 @@ def train(config, train_loader, model, critertion, optimizer,
         acc = accuracy(score_map, target.cpu(), [1])
         preds = decode_preds(score_map, meta['center'], meta['scale'], [64, 64])
 
-        nme_batch_sum = nme_batch_sum + compute_nme(preds, meta)
+        nme_batch = compute_nme(preds, meta)
+        nme_batch_sum = nme_batch_sum + np.sum(nme_batch)
         nme_count = nme_count + preds.size(0)
 
         # optimize
@@ -157,13 +159,12 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict):
             # NME
             nme_temp = compute_nme(preds, meta)
 
-            if nme_temp > 0.08:
-                count_failure_008 += 1
+            failure_008 = (nme_temp > 0.08).sum()
+            failure_010 = (nme_temp > 0.10).sum()
+            count_failure_008 += failure_008
+            count_failure_010 += failure_010
 
-            if nme_temp > 0.10:
-                count_failure_010 += 1
-
-            nme_batch_sum += nme_temp
+            nme_batch_sum += np.sum(nme_temp)
             nme_count = nme_count + preds.size(0)
             for n in range(score_map.size(0)):
                 predictions[meta['index'][n], :, :] = preds[n, :, :]
@@ -236,13 +237,12 @@ def inference(config, data_loader, model, debug=False):
             # NME
             nme_temp = compute_nme(preds, meta)
 
-            if nme_temp > 0.08:
-                count_failure_008 += 1
+            failure_008 = (nme_temp > 0.08).sum()
+            failure_010 = (nme_temp > 0.10).sum()
+            count_failure_008 += failure_008
+            count_failure_010 += failure_010
 
-            if nme_temp > 0.10:
-                count_failure_010 += 1
-
-            nme_batch_sum += nme_temp
+            nme_batch_sum += np.sum(nme_temp)
             nme_count = nme_count + preds.size(0)
             for n in range(score_map.size(0)):
                 predictions[meta['index'][n], :, :] = preds[n, :, :]

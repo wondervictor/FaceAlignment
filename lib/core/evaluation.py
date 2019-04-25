@@ -82,6 +82,9 @@ def accuracy(output, target, idxs, thr=0.5):
 
 
 def compute_nme(preds, meta):
+    """ compute NME
+    N*1
+    """
 
     targets = meta['pts']
     preds = preds.numpy()
@@ -106,7 +109,7 @@ def compute_nme(preds, meta):
             raise ValueError('Number of landmarks is wrong')
         rmse[i] = np.sum(np.linalg.norm(pts_pred - pts_gt, axis=1)) / (interocular * L)
 
-    return np.sum(rmse)
+    return rmse
 
 
 def decode_preds(output, center, scale, res):
