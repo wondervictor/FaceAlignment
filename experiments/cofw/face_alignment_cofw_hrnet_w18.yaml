@@ -5,9 +5,9 @@ PRINT_FREQ: 20
 
 DATASET:
   DATASET: COFW
-  ROOT: '/hdfs/resrchvc/v-tich/FaceAlignment/data'
-  TRAIN_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/cofw/COFW_train_color.mat'
-  TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/cofw/COFW_test_color.mat'
+  ROOT: './data'
+  TRAIN_ANNOTATION: './data/cofw/COFW_train_color.mat'
+  TEST_ANNOTATION: './data/cofw/COFW_test_color.mat'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30

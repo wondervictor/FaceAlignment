@@ -43,6 +43,9 @@ class Face300W(data.Dataset):
         # load annotations
         self.landmarks_frame = pd.read_csv(self.csv_file)
 
+        self.mean = np.array([0.485, 0.456, 0.406])
+        self.std = np.array([0.229, 0.224, 0.225])
+
     def __len__(self):
         return len(self.landmarks_frame)
 
@@ -91,7 +94,8 @@ class Face300W(data.Dataset):
                 target[i] = get_labelmap(target[i], tpts[i]-1, self.sigma,
                                          label_type=self.label_type)
 
-        img = self.transform(img)
+        img = (img/255.0 - self.mean) / self.std
+        img = img.transpose([2, 0, 1])
         target = torch.Tensor(target)
         tpts = torch.Tensor(tpts)
         center = torch.Tensor(center)

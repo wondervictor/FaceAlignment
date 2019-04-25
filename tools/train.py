@@ -92,18 +92,18 @@ def main():
             optimizer, config.TRAIN.LR_STEP,
             config.TRAIN.LR_FACTOR, last_epoch-1
         )
-
+    """
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406],
                              std=[0.229, 0.224, 0.225]),
     ])
+    """
     dataset_type = get_dataset(config)
 
     train_loader = DataLoader(
         dataset=dataset_type(config,
-                             is_train=True,
-                             transform=transform),
+                             is_train=True),
         batch_size=config.TRAIN.BATCH_SIZE_PER_GPU*len(gpus),
         shuffle=True,
         num_workers=config.WORKERS,
@@ -111,8 +111,7 @@ def main():
 
     val_loader = DataLoader(
         dataset=dataset_type(config,
-                             is_train=False,
-                             transform=transform),
+                             is_train=False),
         batch_size=config.TEST.BATCH_SIZE_PER_GPU*len(gpus),
         shuffle=False,
         num_workers=config.WORKERS,

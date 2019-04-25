@@ -52,6 +52,9 @@ class COFW(data.Dataset):
             self.images = self.mat['IsT']
             self.pts = self.mat['phisT']
 
+        self.mean = np.array([0.485, 0.456, 0.406])
+        self.std = np.array([0.229, 0.224, 0.225])
+
     def __len__(self):
         return len(self.images)
 
@@ -89,7 +92,7 @@ class COFW(data.Dataset):
             r = random.uniform(-self.rot_factor, self.rot_factor) \
                 if random.random() <= 0.6 else 0
 
-            if random.random() <= 0.5 and self.flip:
+            if random.random() <= 2 and self.flip:
                 img = np.fliplr(img)
                 pts = shufflelr(pts, width=img.shape[1], dataset='cofw')
                 center[0] = img.shape[1] - center[0]
@@ -107,7 +110,9 @@ class COFW(data.Dataset):
                 target[i] = get_labelmap(target[i], tpts[i]-1, self.sigma,
                                          label_type=self.label_type)
 
-        img = self.transform(img)
+        img = (img/255.0 - self.mean) / self.std
+        img = img.transpose([2, 0, 1])
+        # img = self.transform(img)
         target = torch.Tensor(target)
         tpts = torch.Tensor(tpts)
         center = torch.Tensor(center)

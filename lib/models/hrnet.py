@@ -235,11 +235,9 @@ class HighResolutionModule(nn.Module):
                 if i == j:
                     y = y + x[j]
                 elif j > i:
-                    width_output = x[i].shape[-1]
-                    height_output = x[i].shape[-2]
                     y = y + F.interpolate(
                         self.fuse_layers[i][j](x[j]),
-                        size=[height_output, width_output],
+                        size=[x[i].shape[2], x[i].shape[3]],
                         mode='bilinear')
                 else:
                     y = y + self.fuse_layers[i][j](x[j])
