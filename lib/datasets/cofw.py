@@ -92,7 +92,7 @@ class COFW(data.Dataset):
             r = random.uniform(-self.rot_factor, self.rot_factor) \
                 if random.random() <= 0.6 else 0
 
-            if random.random() <= 2 and self.flip:
+            if random.random() <= 0.5 and self.flip:
                 img = np.fliplr(img)
                 pts = shufflelr(pts, width=img.shape[1], dataset='cofw')
                 center[0] = img.shape[1] - center[0]

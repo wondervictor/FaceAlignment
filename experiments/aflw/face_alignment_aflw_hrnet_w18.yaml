@@ -4,7 +4,7 @@ PRINT_FREQ: 100
 
 DATASET:
   DATASET: AFLW
-  ROOT: '/hdfs/resrchvc/v-tich/FaceAlignment/data/aflw/images'
+  ROOT: ''
   TRAIN_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/aflw/face_landmarks_aflw_train.csv'
   TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/aflw/face_landmarks_aflw_test.csv'
   FLIP: true

@@ -168,22 +168,6 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict):
             for n in range(score_map.size(0)):
                 predictions[meta['index'][n], :, :] = preds[n, :, :]
 
-            # if debug:  # and epoch % args.display == 0
-            #     gt_batch_img = batch_with_heatmap(inp, target)
-            #     pred_batch_img = batch_with_heatmap(inp, score_map)
-            #     if not gt_win or not pred_win:
-            #         plt.subplot(121)
-            #         plt.title('Val-Groundtruth')
-            #         gt_win = plt.imshow(gt_batch_img)
-            #         plt.subplot(122)
-            #         plt.title('Prediction')
-            #         pred_win = plt.imshow(pred_batch_img)
-            #     else:
-            #         gt_win.set_data(gt_batch_img)
-            #         pred_win.set_data(pred_batch_img)
-            #     plt.pause(.05)
-            #     plt.draw()
-
             # measure accuracy and record loss
             losses.update(loss.item(), inp.size(0))
             acces.update(acc[0], inp.size(0))

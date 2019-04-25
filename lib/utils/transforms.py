@@ -58,6 +58,16 @@ def shufflelr(x, width, dataset='mpii'):
             [13, 15],
             [16, 18]
         )
+
+        # Flip horizontal
+        x[:, 0] = width - x[:, 0]
+
+        # Change left-right parts
+        for pair in matched_parts:
+            tmp = x[pair[0] - 1, :].copy()
+            x[pair[0] - 1, :] = x[pair[1] - 1, :]
+            x[pair[1] - 1, :] = tmp
+
     elif dataset == 'wflw':
         matched_parts = (
             [0, 32],  [1,  31], [2,  30], [3,  29], [4,  28], [5, 27], [6, 26], [7, 25], [8, 24], [9, 23], [10, 22],
@@ -67,8 +77,15 @@ def shufflelr(x, width, dataset='mpii'):
             [55, 59], [56, 58],
             [76, 82], [77, 81], [78, 80], [87, 83], [86, 84],
             [88, 92], [89, 91], [95, 93], [96, 97]
-
         )
+        # Flip horizontal
+        x[:, 0] = width - x[:, 0]
+
+        # Change left-right parts
+        for pair in matched_parts:
+            tmp = x[pair[0], :].copy()
+            x[pair[0], :] = x[pair[1], :]
+            x[pair[1], :] = tmp
     elif dataset == '300w':
         matched_parts = (
             [1, 17], [2, 16], [3, 15], [4, 14], [5, 13], [6, 12], [7, 11], [8, 10],
@@ -77,22 +94,30 @@ def shufflelr(x, width, dataset='mpii'):
             [37, 46], [38, 45], [39, 44], [40, 43], [41, 48], [42, 47],
             [49, 55], [50, 54], [51, 53], [62, 64], [61, 65], [68, 66], [59, 57], [60, 56]
         )
+        # Flip horizontal
+        x[:, 0] = width - x[:, 0]
+
+        # Change left-right parts
+        for pair in matched_parts:
+            tmp = x[pair[0] - 1, :].copy()
+            x[pair[0] - 1, :] = x[pair[1] - 1, :]
+            x[pair[1] - 1, :] = tmp
+
     elif dataset == 'cofw':
         matched_parts = (
             [1, 2], [5, 7], [3, 4], [6, 8], [9, 10], [11, 12], [13, 15], [17, 18], [14, 16], [19, 20], [23, 24]
         )
+        # Flip horizontal
+        x[:, 0] = width - x[:, 0]
+
+        # Change left-right parts
+        for pair in matched_parts:
+            tmp = x[pair[0] - 1, :].copy()
+            x[pair[0] - 1, :] = x[pair[1] - 1, :]
+            x[pair[1] - 1, :] = tmp
     else:
         # print('Not supported dataset: ' + dataset)
         raise NotImplemented()
-
-    # Flip horizontal
-    x[:, 0] = width - x[:, 0]
-
-    # Change left-right parts
-    for pair in matched_parts:
-        tmp = x[pair[0]-1, :].copy()
-        x[pair[0]-1, :] = x[pair[1]-1, :]
-        x[pair[1]-1, :] = tmp
 
     return x
 

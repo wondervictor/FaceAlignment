@@ -19,9 +19,9 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import lib.models as models
 from lib.config import config, update_config
-from lib.utils import utils
 from lib.datasets import get_dataset
 from lib.core import function
+from lib.utils import utils
 
 
 def parse_args():
@@ -141,7 +141,7 @@ def main():
              }, predictions, is_best, final_output_dir)
 
     final_model_state_file = os.path.join(final_output_dir,
-                                          'final_state.pth.tar')
+                                          'final_state.pth')
     logger.info('saving final model state to {}'.format(
         final_model_state_file))
     torch.save(model.module.state_dict(), final_model_state_file)
