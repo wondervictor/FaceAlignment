@@ -82,9 +82,6 @@ def accuracy(output, target, idxs, thr=0.5):
 
 
 def compute_nme(preds, meta):
-    """ compute NME
-    N*1
-    """
 
     targets = meta['pts']
     preds = preds.numpy()

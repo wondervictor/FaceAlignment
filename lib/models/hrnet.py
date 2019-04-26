@@ -445,7 +445,7 @@ class HighResolutionNet(nn.Module):
 
         return x
 
-    def init_weights(self, pretrained='', ):
+    def init_weights(self, pretrained=''):
         logger.info('=> init weights from normal distribution')
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -471,7 +471,8 @@ class HighResolutionNet(nn.Module):
 def get_face_alignment_net(config, **kwargs):
 
     model = HighResolutionNet(config, **kwargs)
-    model.init_weights(pretrained=config.MODEL.PRETRAINED)
+    pretrained = config.MODEL.PRETRAINED if config.MODEL.INIT_WEIGHTS else ''
+    model.init_weights(pretrained=pretrained)
 
     return model
 

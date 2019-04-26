@@ -158,7 +158,7 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict):
 
             # NME
             nme_temp = compute_nme(preds, meta)
-
+            # Failure Rate under different threshold
             failure_008 = (nme_temp > 0.08).sum()
             failure_010 = (nme_temp > 0.10).sum()
             count_failure_008 += failure_008

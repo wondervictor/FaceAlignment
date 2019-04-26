@@ -1,16 +1,15 @@
 GPUS: (0,)
 WORKERS: 4
-PRINT_FREQ: 100
+PRINT_FREQ: 50
 
 DATASET:
   DATASET: WFLW
-  ROOT: './data/wflw/WFLW_images/'
+  ROOT: './data/wflw/images/'
   TRAIN_ANNOTATION: './data/wflw/face_landmarks_wflw_train.csv'
   TEST_ANNOTATION: './data/wflw/face_landmarks_wflw_test.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
-
 MODEL:
   NAME: 'hrnet'
   NUM_JOINTS: 98

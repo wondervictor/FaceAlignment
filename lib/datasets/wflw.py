@@ -62,14 +62,10 @@ class WFLW(data.Dataset):
 
         pts = self.landmarks_frame.iloc[idx, 4:].values
         pts = pts.astype('float').reshape(-1, 2)
-        # pts = torch.Tensor(pts.tolist())
 
         scale *= 1.25
         nparts = pts.shape[0]
         img = np.array(Image.open(image_path).convert('RGB'), dtype=np.float32)
-
-        # transform !
-        # img = self.transform(img)
 
         r = 0
         if self.is_train:
@@ -81,7 +77,6 @@ class WFLW(data.Dataset):
                 img = np.fliplr(img)
                 pts = shufflelr(pts, width=img.shape[1], dataset='wflw')
                 center[0] = img.shape[1] - center[0]
-                # center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 2]
 
         img = crop(img, center, scale, self.input_size, rot=r)
 
@@ -108,5 +103,4 @@ class WFLW(data.Dataset):
 
 
 if __name__ == '__main__':
-
     pass

@@ -61,14 +61,10 @@ class Face300W(data.Dataset):
 
         pts = self.landmarks_frame.iloc[idx, 4:].values
         pts = pts.astype('float').reshape(-1, 2)
-        # pts = torch.Tensor(pts.tolist())
 
         scale *= 1.25
         nparts = pts.shape[0]
         img = np.array(Image.open(image_path).convert('RGB'), dtype=np.float32)
-
-        # transform !
-        # img = self.transform(img)
 
         r = 0
         if self.is_train:
@@ -80,7 +76,6 @@ class Face300W(data.Dataset):
                 img = np.fliplr(img)
                 pts = shufflelr(pts, width=img.shape[1], dataset='aflw')
                 center[0] = img.shape[1] - center[0]
-                # center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 3]
 
         img = crop(img, center, scale, self.input_size, rot=r)
 
@@ -101,7 +96,7 @@ class Face300W(data.Dataset):
         center = torch.Tensor(center)
 
         meta = {'index': idx, 'center': center, 'scale': scale,
-                'pts': torch.Tensor(pts), 'tpts': tpts,}
+                'pts': torch.Tensor(pts), 'tpts': tpts}
 
         return img, target, meta
 
