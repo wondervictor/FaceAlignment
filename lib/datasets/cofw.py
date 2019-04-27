@@ -62,7 +62,6 @@ class COFW(data.Dataset):
 
         img = self.images[idx][0]
 
-        # grayscale --> RGB
         if len(img.shape) == 2:
             img = img.reshape(img.shape[0], img.shape[1], 1)
             img = np.repeat(img, 3, axis=2)
@@ -80,8 +79,6 @@ class COFW(data.Dataset):
         scale = max(math.ceil(xmax) - math.floor(xmin), math.ceil(ymax) - math.floor(ymin)) / 200.0
         center = torch.Tensor([center_w, center_h])
 
-        # pts = torch.Tensor(pts.tolist())
-
         scale *= 1.25
         nparts = pts.shape[0]
 
@@ -96,7 +93,6 @@ class COFW(data.Dataset):
                 img = np.fliplr(img)
                 pts = shufflelr(pts, width=img.shape[1], dataset='cofw')
                 center[0] = img.shape[1] - center[0]
-                # center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 3]
 
         img = crop(img, center, scale, self.input_size, rot=r)
 
@@ -112,7 +108,6 @@ class COFW(data.Dataset):
         img = img.astype(np.float32)
         img = (img/255 - self.mean) / self.std
         img = img.transpose([2, 0, 1])
-        # img = self.transform(img)
         target = torch.Tensor(target)
         tpts = torch.Tensor(tpts)
         center = torch.Tensor(center)

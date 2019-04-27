@@ -1,10 +1,10 @@
-GPUS: (0,)
-WORKERS: 6
-PRINT_FREQ: 100
+GPUS: (0, )
+WORKERS: 4
+PRINT_FREQ: 50
 
 DATASET:
   DATASET: 300W
-  ROOT: './data/300w/images/'
+  ROOT: './data/300w/images'
   TRAIN_ANNOTATION: './data/300w/face_landmarks_300w_train.csv'
   TEST_ANNOTATION: './data/300w/face_landmarks_300w_test.csv'
   FLIP: true

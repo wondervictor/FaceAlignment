@@ -13,15 +13,6 @@ from ..utils.transforms import shufflelr, crop, get_labelmap, transform_pixel
 
 class AFLW(data.Dataset):
     """AFLW
-
-    import torchvision.transforms as transforms
-
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225]),
-    ])
-
     """
     def __init__(self, cfg, is_train=True, transform=None):
         # specify annotation file for dataset
@@ -61,14 +52,10 @@ class AFLW(data.Dataset):
 
         pts = self.landmarks_frame.iloc[idx, 5:].values
         pts = pts.astype('float').reshape(-1, 2)
-        # pts = torch.Tensor(pts.tolist())
 
         scale *= 1.25
         nparts = pts.shape[0]
         img = np.array(Image.open(image_path).convert('RGB'), dtype=np.float32)
-
-        # transform !
-        # img = self.transform(img)
 
         r = 0
         if self.is_train:
@@ -80,7 +67,6 @@ class AFLW(data.Dataset):
                 img = np.fliplr(img)
                 pts = shufflelr(pts, width=img.shape[1], dataset='aflw')
                 center[0] = img.shape[1] - center[0]
-                # center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 3]
 
         img = crop(img, center, scale, self.input_size, rot=r)
 
