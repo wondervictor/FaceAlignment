@@ -4,7 +4,7 @@ PRINT_FREQ: 50
 
 DATASET:
   DATASET: 300W
-  ROOT: './data/300w/images/'
+  ROOT: './data/300w/images'
   TRAIN_ANNOTATION: './data/300w/face_landmarks_300w_train.csv'
   TEST_ANNOTATION: './data/300w/face_landmarks_300w_valid.csv'
   FLIP: true
@@ -15,7 +15,7 @@ MODEL:
   NUM_JOINTS: 68
   INIT_WEIGHTS: true
   PRETRAINED: 'hrnetv2_pretrained/hrnetv2_w18_imagenet_pretrained.pth'
-  SIGMA: 1.0
+  SIGMA: 1.5
   IMAGE_SIZE:
     - 256
     - 256
