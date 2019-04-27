@@ -1,6 +1,6 @@
-GPUS: (0,)
+GPUS: (0,1)
 
-WORKERS: 4
+WORKERS: 8
 PRINT_FREQ: 20
 
 DATASET:
@@ -72,7 +72,7 @@ TRAIN:
   END_EPOCH: 60
   RESUME: true
   OPTIMIZER: 'adam'
-  LR: 0.0001
+  LR: 0.0002
   WD: 0.0
   LR_STEP: [30, 50]
   MOMENTUM: 0.0

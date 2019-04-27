@@ -78,7 +78,7 @@ class Face300W(data.Dataset):
                 if random.random() <= 0.6 else 0
             if random.random() <= 0.5 and self.flip:
                 img = np.fliplr(img)
-                pts = shufflelr(pts, width=img.shape[1], dataset='aflw')
+                pts = shufflelr(pts, width=img.shape[1], dataset='300w')
                 center[0] = img.shape[1] - center[0]
                 # center_w = img.shape[1] - self.landmarks_frame.iloc[idx, 3]
 
