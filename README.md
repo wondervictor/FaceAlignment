@@ -14,33 +14,36 @@ convolutions, leading to stronger representations.
 HRNetV2 ImageNet pretrained models are now available! Codes and pretrained models are in [HRNets for Image Classification](https://github.com/HRNet/HRNet-Image-Classification)
 
 
+We adopt **HRNetV2-W18**(#Params=9.3M, GFLOPs=4.3G) for face landmark detection on COFW, AFLW, WFLW and 300W.
+
 ### COFW
 
 The model is trained on COFW *train* and evaluated on COFW *test*.
 
-| Model | #Params | GFLOPs | NME | FR<sub>0.1</sub>|pretrained model|model|
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|HRNetV2 | 9.3M | 4.3 | 3.45 | 0.20 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-COFW.pth](https://1drv.ms/u/s!AiWjZ1LamlxzdFIsEUQl8jgUaMk)|
+| Model | NME | FR<sub>0.1</sub>|pretrained model|model|
+|:--:|:--:|:--:|:--:|:--:|
+|HRNetV2-W18  | 3.45 | 0.20 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-COFW.pth](https://1drv.ms/u/s!AiWjZ1LamlxzdFIsEUQl8jgUaMk)|
 
 
 ### AFLW
 The model is trained on AFLW *train* and evaluated on AFLW *full* and *frontal*.
 
-| Model | #Params | GFLOPs | NME(*full*) | NME(*frontal*) | pretrained model|model|
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|HRNetV2 | 9.3M | 4.3 | 1.57 | 1.46 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-AFLW.pth](https://1drv.ms/u/s!AiWjZ1Lamlxzc7xumEw810iBLTc)|
+| Model | NME<sub>*full*</sub> | NME<sub>*frontal*</sub> | pretrained model|model|
+|:--:|:--:|:--:|:--:|:--:|
+|HRNetV2-W18 | 1.57 | 1.46 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-AFLW.pth](https://1drv.ms/u/s!AiWjZ1Lamlxzc7xumEw810iBLTc)|
 
 ### WFLW
 
-| Model | #Params | GFLOPs | NME(*test*) | NME(*pose*) | NME(*illumination*) | NME(*occlution*) | NME(*blur*) | NME(*makeup*) | NME(*expression*) | pretrained model|model|
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|HRNetV2 | 9.3M | 4.3 | 4.60 | 7.86 | 4.57 | 5.42 | 5.36 | 4.26 | 4.78 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-WFLW.pth](https://1drv.ms/u/s!AiWjZ1LamlxzdTsr_9QZCwJsn5U)|
+| Model |  NME<sub>*test*</sub> | NME<sub>*pose*</sub> | NME<sub>*illumination*</sub> | NME<sub>*occlution*</sub> | NME<sub>*blur*</sub> | NME<sub>*makeup*</sub> | NME<sub>*expression*</sub> | pretrained model|model|
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|HRNetV2-W18 | 4.60 | 7.86 | 4.57 | 5.42 | 5.36 | 4.26 | 4.78 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-WFLW.pth](https://1drv.ms/u/s!AiWjZ1LamlxzdTsr_9QZCwJsn5U)|
+
 
 ### 300W
 
-| Model | #Params | GFLOPs | NME(*common*) | NME(*challenge*) | NME(*full*) | NME(*test*) |  pretrained model|model|
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|HRNetV2 | 9.3M | 4.3 | 1.57 | 1.46 | | | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-300W.pth]()|
+| Model |  NME<sub>*common*</sub> | NME<sub>*challenge*</sub> | NME<sub>*full*</sub> | NME<sub>*test*</sub> |  pretrained model|model|
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|HRNetV2-W18 | 1.57 | 1.46 | | | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-300W.pth]()|
 
 ## Quick start
 #### Environment
