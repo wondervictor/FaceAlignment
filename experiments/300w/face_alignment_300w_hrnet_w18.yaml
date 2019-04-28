@@ -1,12 +1,12 @@
-GPUS: (0, 1)
+GPUS: (0, )
 WORKERS: 8
 PRINT_FREQ: 50
 
 DATASET:
   DATASET: 300W
   ROOT: './data/300w/images'
-  TRAIN_ANNOTATION: './data/300w/face_landmarks_300w_train.csv'
-  TEST_ANNOTATION: './data/300w/face_landmarks_300w_valid.csv'
+  TRAINSET: './data/300w/face_landmarks_300w_train.csv'
+  TESTSET: './data/300w/face_landmarks_300w_valid.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
@@ -70,7 +70,7 @@ TRAIN:
   END_EPOCH: 60
   RESUME: true
   OPTIMIZER: 'adam'
-  LR: 0.0002
+  LR: 0.0001
   WD: 0.0
   LR_STEP: [30, 50]
   MOMENTUM: 0.0

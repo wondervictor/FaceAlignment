@@ -1,8 +1,9 @@
 # ------------------------------------------------------------------------------
 # Copyright (c) Microsoft
 # Licensed under the MIT License.
-# Created by Tianheng Cheng(tianhengcheng@gmail.com)
+# Created by Tianheng Cheng(tianhengcheng@gmail.com), Yang Zhao
 # ------------------------------------------------------------------------------
+
 import math
 
 import torch

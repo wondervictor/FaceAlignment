@@ -1,12 +1,14 @@
+# ------------------------------------------------------------------------------
+# Copyright (c) Microsoft
+# Licensed under the MIT License.
+# Created by Tianheng Cheng(tianhengcheng@gmail.com), Yang Zhao
+# ------------------------------------------------------------------------------
 
-import os
 import math
 import random
 
 import torch
 import torch.utils.data as data
-import pandas as pd
-from PIL import Image
 import numpy as np
 
 from hdf5storage import loadmat
@@ -14,23 +16,13 @@ from ..utils.transforms import shufflelr, crop, get_labelmap, transform_pixel
 
 
 class COFW(data.Dataset):
-    """COFW
 
-    import torchvision.transforms as transforms
-
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225]),
-    ])
-
-    """
     def __init__(self, cfg, is_train=True, transform=None):
         # specify annotation file for dataset
         if is_train:
-            self.mat_file = cfg.DATASET.TRAIN_ANNOTATION
+            self.mat_file = cfg.DATASET.TRAINSET
         else:
-            self.mat_file = cfg.DATASET.TEST_ANNOTATION
+            self.mat_file = cfg.DATASET.TESTSET
 
         self.is_train = is_train
         self.transform = transform

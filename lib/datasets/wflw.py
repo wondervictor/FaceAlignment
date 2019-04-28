@@ -1,3 +1,8 @@
+# ------------------------------------------------------------------------------
+# Copyright (c) Microsoft
+# Licensed under the MIT License.
+# Created by Tianheng Cheng(tianhengcheng@gmail.com), Yang Zhao
+# ------------------------------------------------------------------------------
 
 import os
 import random
@@ -12,23 +17,12 @@ from ..utils.transforms import shufflelr, crop, get_labelmap, transform_pixel
 
 
 class WFLW(data.Dataset):
-    """WFLW
-
-    import torchvision.transforms as transforms
-
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225]),
-    ])
-
-    """
     def __init__(self, cfg, is_train=True, transform=None):
         # specify annotation file for dataset
         if is_train:
-            self.csv_file = cfg.DATASET.TRAIN_ANNOTATION
+            self.csv_file = cfg.DATASET.TRAINSET
         else:
-            self.csv_file = cfg.DATASET.TEST_ANNOTATION
+            self.csv_file = cfg.DATASET.TESTSET
 
         self.is_train = is_train
         self.transform = transform

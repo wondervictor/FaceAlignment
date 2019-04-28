@@ -12,14 +12,10 @@ import time
 import logging
 
 import torch
-import matplotlib
-matplotlib.use('Agg')
 import numpy as np
-import matplotlib.pyplot as plt
 
 from ..utils.transforms import flip_back
 from .evaluation import accuracy, decode_preds, compute_nme
-from ..utils.imutils import batch_with_heatmap
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +142,6 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict):
                 # flip W
                 flip_input = torch.flip(inp, dim=[3])
                 flip_output = model(flip_input)
-                # [-1] ??
                 flip_output = flip_back(flip_output[-1].data.cpu())
                 score_map += flip_output
             # loss
@@ -197,7 +192,7 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict):
     return nme, predictions
 
 
-def inference(config, data_loader, model, debug=False):
+def inference(config, data_loader, model):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -212,7 +207,6 @@ def inference(config, data_loader, model, debug=False):
     nme_batch_sum = 0
     count_failure_008 = 0
     count_failure_010 = 0
-    gt_win, pred_win = None, None
     end = time.time()
     flip = config.TEST.FLIP_TEST
 
@@ -246,22 +240,6 @@ def inference(config, data_loader, model, debug=False):
             nme_count = nme_count + preds.size(0)
             for n in range(score_map.size(0)):
                 predictions[meta['index'][n], :, :] = preds[n, :, :]
-
-            if debug:  # and epoch % args.display == 0
-                gt_batch_img = batch_with_heatmap(inp, target)
-                pred_batch_img = batch_with_heatmap(inp, score_map)
-                if not gt_win or not pred_win:
-                    plt.subplot(121)
-                    plt.title('Val-Groundtruth')
-                    gt_win = plt.imshow(gt_batch_img)
-                    plt.subplot(122)
-                    plt.title('Prediction')
-                    pred_win = plt.imshow(pred_batch_img)
-                else:
-                    gt_win.set_data(gt_batch_img)
-                    pred_win.set_data(pred_batch_img)
-                plt.pause(.05)
-                plt.draw()
 
             acces.update(acc[0], inp.size(0))
             # measure elapsed time

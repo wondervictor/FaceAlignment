@@ -5,8 +5,8 @@ PRINT_FREQ: 50
 DATASET:
   DATASET: WFLW
   ROOT: './data/wflw/images/'
-  TRAIN_ANNOTATION: './data/wflw/face_landmarks_wflw_train.csv'
-  TEST_ANNOTATION: './data/wflw/face_landmarks_wflw_test_blur.csv'
+  TRAINSET: './data/wflw/face_landmarks_wflw_train.csv'
+  TESTSET: './data/wflw/face_landmarks_wflw_test.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30

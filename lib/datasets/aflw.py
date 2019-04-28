@@ -1,3 +1,8 @@
+# ------------------------------------------------------------------------------
+# Copyright (c) Microsoft
+# Licensed under the MIT License.
+# Created by Tianheng Cheng(tianhengcheng@gmail.com), Yang Zhao
+# ------------------------------------------------------------------------------
 
 import os
 import random
@@ -19,9 +24,9 @@ class AFLW(data.Dataset):
     def __init__(self, cfg, is_train=True, transform=None):
         # specify annotation file for dataset
         if is_train:
-            self.csv_file = cfg.DATASET.TRAIN_ANNOTATION
+            self.csv_file = cfg.DATASET.TRAINSET
         else:
-            self.csv_file = cfg.DATASET.TEST_ANNOTATION
+            self.csv_file = cfg.DATASET.TESTSET
 
         self.is_train = is_train
         self.transform = transform

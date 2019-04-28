@@ -20,7 +20,7 @@ The model is trained on COFW *train* and evaluated on COFW *test*.
 
 | Model | #Params | GFLOPs | NME | FR<sub>0.1</sub>|pretrained model|model|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|HRNetV2 | 9.3M | 4.3 | 3.45 | 0.20 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-COFW.pth]()|
+|HRNetV2 | 9.3M | 4.3 | 3.45 | 0.20 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-COFW.pth](https://1drv.ms/u/s!AiWjZ1LamlxzdFIsEUQl8jgUaMk)|
 
 
 ### AFLW
@@ -28,13 +28,13 @@ The model is trained on AFLW *train* and evaluated on AFLW *full* and *frontal*.
 
 | Model | #Params | GFLOPs | NME(*full*) | NME(*frontal*) | pretrained model|model|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|HRNetV2 | 9.3M | 4.3 | 1.57 | 1.46 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-AFLW.pth]()|
+|HRNetV2 | 9.3M | 4.3 | 1.57 | 1.46 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-AFLW.pth](https://1drv.ms/u/s!AiWjZ1Lamlxzc7xumEw810iBLTc)|
 
 ### WFLW
 
 | Model | #Params | GFLOPs | NME(*test*) | NME(*pose*) | NME(*illumination*) | NME(*occlution*) | NME(*blur*) | NME(*makeup*) | NME(*expression*) | pretrained model|model|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|HRNetV2 | 9.3M | 4.3 | 4.60 | 7.86 | 4.57 | 5.42 | 5.36 | 4.26 | 4.78 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-WFLW.pth]()|
+|HRNetV2 | 9.3M | 4.3 | 4.60 | 7.86 | 4.57 | 5.42 | 5.36 | 4.26 | 4.78 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-WFLW.pth](https://1drv.ms/u/s!AiWjZ1LamlxzdTsr_9QZCwJsn5U)|
 
 ### 300W
 

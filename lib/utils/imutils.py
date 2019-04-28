@@ -1,3 +1,8 @@
+# ------------------------------------------------------------------------------
+# Copyright (c) Microsoft
+# Licensed under the MIT License.
+# Created by Tianheng Cheng(tianhengcheng@gmail.com), Yang Zhao
+# ------------------------------------------------------------------------------
 
 import scipy
 import torch

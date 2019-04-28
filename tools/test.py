@@ -27,10 +27,7 @@ def parse_args():
 
     parser.add_argument('--cfg', help='experiment configuration filename',
                         required=True, type=str)
-
     parser.add_argument('--model-file', help='model parameters', required=True, type=str)
-
-    parser.add_argument('--debug', action='store_true', default=False)
 
     args = parser.parse_args()
     update_config(config, args)
@@ -76,7 +73,7 @@ def main():
         pin_memory=config.PIN_MEMORY
     )
 
-    nme, predictions = function.inference(config, test_loader, model, args.debug)
+    nme, predictions = function.inference(config, test_loader, model)
 
     torch.save(predictions, os.path.join(final_output_dir, 'predictions.pth'))
 
