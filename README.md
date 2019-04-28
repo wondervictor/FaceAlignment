@@ -67,9 +67,47 @@ mkdir hrnetv2_pretrained
 ```
 #### Data
 
+1. You need to download the annotations files which have been processed from [OneDrive](https://1drv.ms/u/s!AiWjZ1LamlxzdmYbSkHpPYhI8Ms).
 
+2. You need to download images (300W, AFLW, WFLW) from official websites and then put them into `images` folder for each dataset.
 
-#### Train (multi-gpu training)
+Your `data` directory should look like this:
+
+````
+HRNet-Facial-Landmark-Detection
+-- lib
+-- experiments
+-- tools
+-- data
+   |-- 300w
+   |   |-- face_landmarks_300w_test.csv
+   |   |-- face_landmarks_300w_train.csv
+   |   |-- face_landmarks_300w_valid.csv
+   |   |-- face_landmarks_300w_valid_challenge.csv
+   |   |-- face_landmarks_300w_valid_common.csv
+   |   |-- images
+   |-- aflw
+   |   |-- face_landmarks_aflw_test.csv
+   |   |-- face_landmarks_aflw_test_frontal.csv
+   |   |-- face_landmarks_aflw_train.csv
+   |   |-- images
+   |-- cofw
+   |   |-- COFW_test_color.mat
+   |   |-- COFW_train_color.mat  
+   |-- wflw
+   |   |-- face_landmarks_wflw_test.csv
+   |   |-- face_landmarks_wflw_test_blur.csv
+   |   |-- face_landmarks_wflw_test_expression.csv
+   |   |-- face_landmarks_wflw_test_illumination.csv
+   |   |-- face_landmarks_wflw_test_largepose.csv
+   |   |-- face_landmarks_wflw_test_makeup.csv
+   |   |-- face_landmarks_wflw_test_occlusion.csv
+   |   |-- face_landmarks_wflw_train.csv
+   |   |-- images
+
+````
+
+#### Train
 Please specify the configuration file in `experiments` (learning rate should be adjusted when the number of GPUs is changed).
 ````bash
 python tools/train.py --cfg <CONFIG-FILE>
