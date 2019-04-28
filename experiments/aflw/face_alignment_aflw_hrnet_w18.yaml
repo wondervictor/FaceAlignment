@@ -1,12 +1,12 @@
-GPUS: (0,)
+GPUS: (0, )
 WORKERS: 4
 PRINT_FREQ: 50
 
 DATASET:
   DATASET: AFLW
-  ROOT: ''
+  ROOT: './data/aflw/images/'
   TRAIN_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/aflw/face_landmarks_aflw_train.csv'
-  TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/aflw/face_landmarks_aflw_test.csv'
+  TEST_ANNOTATION: '/hdfs/resrchvc/v-tich/FaceAlignment/data/aflw/face_landmarks_aflw_test_frontal.csv'
   FLIP: true
   SCALE_FACTOR: 0.25
   ROT_FACTOR: 30
@@ -71,7 +71,7 @@ TRAIN:
   END_EPOCH: 60
   RESUME: true
   OPTIMIZER: 'adam'
-  LR: 0.0001
+  LR: 0.0002
   WD: 0.0
   LR_STEP: [30, 50]
   MOMENTUM: 0.0

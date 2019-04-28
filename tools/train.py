@@ -65,7 +65,7 @@ def main():
     criterion = torch.nn.MSELoss(size_average=True).cuda()
 
     optimizer = utils.get_optimizer(config, model)
-    best_nme = 0
+    best_nme = 100
     last_epoch = config.TRAIN.BEGIN_EPOCH
     if config.TRAIN.RESUME:
         model_state_file = os.path.join(final_output_dir,
@@ -124,13 +124,14 @@ def main():
         best_nme = min(nme, best_nme)
 
         logger.info('=> saving checkpoint to {}'.format(final_output_dir))
+        print("best:", is_best)
         utils.save_checkpoint(
             {"state_dict": model.state_dict(),
              "epoch": epoch + 1,
              "nme": nme,
              "best_nme": best_nme,
              "optimizer": optimizer.state_dict(),
-             }, predictions, is_best, final_output_dir)
+             }, predictions, is_best, final_output_dir, 'checkpoint_{}.pth'.format(epoch))
 
     final_model_state_file = os.path.join(final_output_dir,
                                           'final_state.pth')

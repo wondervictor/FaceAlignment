@@ -5,10 +5,12 @@ import random
 import torch
 import torch.utils.data as data
 import pandas as pd
-from PIL import Image
+from PIL import Image, ImageFile
 import numpy as np
 
 from ..utils.transforms import shufflelr, crop, get_labelmap, transform_pixel
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 class AFLW(data.Dataset):
