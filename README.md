@@ -14,7 +14,7 @@ convolutions, leading to stronger representations.
 HRNetV2 ImageNet pretrained models are now available! Codes and pretrained models are in [HRNets for Image Classification](https://github.com/HRNet/HRNet-Image-Classification)
 
 
-We adopt **HRNetV2-W18**(#Params=9.3M, GFLOPs=4.3G) for face landmark detection on COFW, AFLW, WFLW and 300W.
+We adopt **HRNetV2-W18**(#Params=9.3M, GFLOPs=4.3G) for facial landmark detection on COFW, AFLW, WFLW and 300W.
 
 ### COFW
 
@@ -44,6 +44,9 @@ The model is trained on AFLW *train* and evaluated on AFLW *full* and *frontal*.
 | Model |  NME<sub>*common*</sub> | NME<sub>*challenge*</sub> | NME<sub>*full*</sub> | NME<sub>*test*</sub> |  pretrained model|model|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 |HRNetV2-W18 | 1.57 | 1.46 | | | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-300W.pth]()|
+
+
+![](images/face.png)
 
 ## Quick start
 #### Environment
