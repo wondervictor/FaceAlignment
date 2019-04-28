@@ -112,8 +112,7 @@ def compute_nme(preds, meta):
 def decode_preds(output, center, scale, res):
     coords = get_preds(output)  # float type
 
-    coords = coords.cpu()  # zhao yang
-
+    coords = coords.cpu()
     # pose-processing
     for n in range(coords.size(0)):
         for p in range(coords.size(1)):
