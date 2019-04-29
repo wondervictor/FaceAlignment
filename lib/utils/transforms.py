@@ -21,18 +21,14 @@ def fliplr(x):
     return x.astype(float)
 
 
-def flip_back(flip_output, dataset='mpii'):
+def flip_back(flip_output):
     """
     flip output map
     """
-    if dataset == 'mpii':
-        matched_parts = (
-            [0, ],   [1, 4],   [2, 3],
-            [10, 15], [11, 14], [12, 13]
-        )
-    else:
-        raise NotImplemented('Not supported dataset: ' + dataset)
-        # print('Not supported dataset: ' + dataset)
+    matched_parts = (
+        [0, ], [1, 4], [2, 3],
+        [10, 15], [11, 14], [12, 13]
+    )
 
     # flip output horizontally
     flip_output = fliplr(flip_output.numpy())
@@ -89,7 +85,6 @@ def shufflelr(x, width, dataset='mpii'):
             [1, 2], [5, 7], [3, 4], [6, 8], [9, 10], [11, 12], [13, 15], [17, 18], [14, 16], [19, 20], [23, 24]
         )
     else:
-        # print('Not supported dataset: ' + dataset)
         raise NotImplemented()
 
     # Flip horizontal
@@ -121,8 +116,7 @@ def get_dir(src_point, rot_rad):
 
 def get_affine_transform(
         center, scale, rot, output_size,
-        shift=np.array([0, 0], dtype=np.float32), inv=0
-):
+        shift=np.array([0, 0], dtype=np.float32), inv=0):
     if not isinstance(scale, np.ndarray) and not isinstance(scale, list):
         print(scale)
         scale = np.array([scale, scale])
@@ -206,9 +200,7 @@ def transform_pixel(pt, center, scale, res, invert=0, rot=0):
 
 
 def transform_preds(coords, center, scale, res):
-    # size = coords.size()
-    # coords = coords.view(-1, coords.size(-1))
-    # print(coords.size())
+
     for p in range(coords.size(0)):
         coords[p, 0:2] = torch.tensor(transform_pixel(coords[p, 0:2], center, scale, res, 1, 0))
     return coords
@@ -265,8 +257,6 @@ def crop(img, center, scale, res, rot=0):
         # Remove padding
         new_img = scipy.misc.imrotate(new_img, rot)
         new_img = new_img[pad:-pad, pad:-pad]
-
-    # new_img = im_to_torch(scipy.misc.imresize(new_img, res))
     new_img = scipy.misc.imresize(new_img, res)
     return new_img
 
@@ -274,7 +264,6 @@ def crop(img, center, scale, res, rot=0):
 def get_labelmap(img, pt, sigma, label_type='Gaussian'):
     # Draw a 2D gaussian
     # Adopted from https://github.com/anewell/pose-hg-train/blob/master/src/pypose/draw.py
-    # img = to_numpy(img)
 
     # Check that any part of the gaussian is in-bounds
     ul = [int(pt[0] - 3 * sigma), int(pt[1] - 3 * sigma)]

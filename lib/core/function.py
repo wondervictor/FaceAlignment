@@ -126,7 +126,6 @@ def validate(config, val_loader, model, criterion, epoch, writer_dict):
     nme_batch_sum = 0
     count_failure_008 = 0
     count_failure_010 = 0
-    # gt_win, pred_win = None, None
     end = time.time()
     flip = config.TEST.FLIP_TEST
 

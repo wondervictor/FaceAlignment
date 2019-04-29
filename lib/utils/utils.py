@@ -89,5 +89,5 @@ def save_checkpoint(states, predictions, is_best,
     os.symlink(os.path.join(output_dir, filename), os.path.join(output_dir, 'latest.pth'))
 
     if is_best and 'state_dict' in states.keys():
-        torch.save(states['state_dict'], os.path.join(output_dir, 'model_best.pth'))
+        torch.save(states['state_dict'].module, os.path.join(output_dir, 'model_best.pth'))
 

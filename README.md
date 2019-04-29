@@ -3,11 +3,11 @@
 This is the official code of [High-Resolution Representations for Facial Landmark Detection](https://arxiv.org/pdf/1904.04514.pdf). We extend the high-resolution representation (HRNet) [1] by augmenting the high-resolution representation by aggregating the (upsampled) representations from all the parallel
 convolutions, leading to stronger representations.
 
-<!-- <div align=center>
+<div align=center>
 
-![](images/hrnetv2p.png)
+![](images/hrnet.jpg)
 
-</div> -->
+</div>
 
 ## Performance
 ### ImageNet pretrained models
@@ -34,16 +34,16 @@ The model is trained on AFLW *train* and evaluated on AFLW *full* and *frontal*.
 
 ### WFLW
 
-| Model |  NME<sub>*test*</sub> | NME<sub>*pose*</sub> | NME<sub>*illumination*</sub> | NME<sub>*occlution*</sub> | NME<sub>*blur*</sub> | NME<sub>*makeup*</sub> | NME<sub>*expression*</sub> | pretrained model|model|
+| NME |  *test* | *pose* | *illumination* | *occlution* | *blur* | *makeup* | *expression* | pretrained model|model|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 |HRNetV2-W18 | 4.60 | 7.86 | 4.57 | 5.42 | 5.36 | 4.26 | 4.78 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-WFLW.pth](https://1drv.ms/u/s!AiWjZ1LamlxzdTsr_9QZCwJsn5U)|
 
 
 ### 300W
 
-| Model |  NME<sub>*common*</sub> | NME<sub>*challenge*</sub> | NME<sub>*full*</sub> | NME<sub>*test*</sub> |  pretrained model|model|
+| NME | *common*| *challenge* | *full* | *test*|  pretrained model|model|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-|HRNetV2-W18 | 1.57 | 1.46 | | | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-300W.pth]()|
+|HRNetV2-W18 | 2.91 | 5.11 | 3.34 | 3.85 | [HRNetV2-W18](https://1drv.ms/u/s!Aus8VCZ_C_33cMkPimlmClRvmpw) | [HR18-300W.pth](https://1drv.ms/u/s!AiWjZ1Lamlxzd69Qk5c5qOw4ZaA)|
 
 
 ![](images/face.png)
