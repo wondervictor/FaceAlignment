@@ -133,7 +133,7 @@ python tools/test.py --cfg experiments/wflw/face_alignment_wflw_hrnet_w18.yaml -
  
 ## Other applications of HRNets (codes and models):
 * [Human pose estimation](https://github.com/leoxiaobin/deep-high-resolution-net.pytorch)
-* [Semantic segmentation](https://github.com/HRNet/HRNet-Semantic-Segmentation) (coming soon)
+* [Semantic segmentation](https://github.com/HRNet/HRNet-Semantic-Segmentation)
 * [Object detection](https://github.com/HRNet/HRNet-Object-Detection)
 * [Image classification](https://github.com/HRNet/HRNet-Image-Classification)
  

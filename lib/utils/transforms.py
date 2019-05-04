@@ -41,7 +41,7 @@ def flip_back(flip_output):
     return torch.from_numpy(flip_output).float()
 
 
-def shufflelr(x, width, dataset='mpii'):
+def fliplr_joints(x, width, dataset='aflw'):
     """
     flip coords
     """
@@ -259,21 +259,19 @@ def crop(img, center, scale, res, rot=0):
     return new_img
 
 
-def get_labelmap(img, pt, sigma, label_type='Gaussian'):
-    # Draw a 2D gaussian
-    # Adopted from https://github.com/anewell/pose-hg-train/blob/master/src/pypose/draw.py
-
+def generate_target(img, pt, sigma, label_type='Gaussian'):
     # Check that any part of the gaussian is in-bounds
-    ul = [int(pt[0] - 3 * sigma), int(pt[1] - 3 * sigma)]
-    br = [int(pt[0] + 3 * sigma + 1), int(pt[1] + 3 * sigma + 1)]
+    tmp_size = sigma * 3
+    ul = [int(pt[0] - tmp_size), int(pt[1] - tmp_size)]
+    br = [int(pt[0] + tmp_size + 1), int(pt[1] + tmp_size + 1)]
     if (ul[0] >= img.shape[1] or ul[1] >= img.shape[0] or
             br[0] < 0 or br[1] < 0):
         # If not, just return the image as is
         return img
 
     # Generate gaussian
-    size = 6 * sigma + 1
-    x = np.arange(0, size, 1, float)
+    size = 2 * tmp_size + 1
+    x = np.arange(0, size, 1, np.float32)
     y = x[:, np.newaxis]
     x0 = y0 = size // 2
     # The gaussian is not normalized, we want the center value to equal 1

@@ -13,7 +13,7 @@ import pandas as pd
 from PIL import Image, ImageFile
 import numpy as np
 
-from ..utils.transforms import shufflelr, crop, get_labelmap, transform_pixel
+from ..utils.transforms import fliplr_joints, crop, generate_target, transform_pixel
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -72,7 +72,7 @@ class AFLW(data.Dataset):
                 if random.random() <= 0.6 else 0
             if random.random() <= 0.5 and self.flip:
                 img = np.fliplr(img)
-                pts = shufflelr(pts, width=img.shape[1], dataset='aflw')
+                pts = fliplr_joints(pts, width=img.shape[1], dataset='aflw')
                 center[0] = img.shape[1] - center[0]
 
         img = crop(img, center, scale, self.input_size, rot=r)
@@ -84,8 +84,8 @@ class AFLW(data.Dataset):
             if tpts[i, 1] > 0:
                 tpts[i, 0:2] = transform_pixel(tpts[i, 0:2]+1, center,
                                                scale, self.output_size, rot=r)
-                target[i] = get_labelmap(target[i], tpts[i]-1, self.sigma,
-                                         label_type=self.label_type)
+                target[i] = generate_target(target[i], tpts[i]-1, self.sigma,
+                                            label_type=self.label_type)
         img = img.astype(np.float32)
         img = (img/255.0 - self.mean) / self.std
         img = img.transpose([2, 0, 1])
