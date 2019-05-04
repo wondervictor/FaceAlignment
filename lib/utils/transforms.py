@@ -11,7 +11,6 @@ import scipy.misc
 import numpy as np
 
 
-# TODO: remove
 def fliplr(x):
     if x.ndim == 3:
         x = np.transpose(np.fliplr(np.transpose(x, (0, 2, 1))), (0, 2, 1))
@@ -243,7 +242,6 @@ def crop(img, center, scale, res, rot=0):
         new_shape += [img.shape[2]]
 
     new_img = np.zeros(new_shape, dtype=np.float32)
-    # new_img.fill(128)
 
     # Range to fill new array
     new_x = max(0, -ul[0]), min(br[0], len(img[0])) - ul[0]

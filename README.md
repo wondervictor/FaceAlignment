@@ -1,7 +1,9 @@
 # High-resolution networks (HRNets) for facial landmark detection
 ## Introduction
-This is the official code of [High-Resolution Representations for Facial Landmark Detection](https://arxiv.org/pdf/1904.04514.pdf). We extend the high-resolution representation (HRNet) [1] by augmenting the high-resolution representation by aggregating the (upsampled) representations from all the parallel
-convolutions, leading to stronger representations.
+This is the official code of [High-Resolution Representations for Facial Landmark Detection](https://arxiv.org/pdf/1904.04514.pdf). 
+We extend the high-resolution representation (HRNet) [1] by augmenting the high-resolution representation by aggregating the (upsampled) 
+representations from all the parallel convolutions, leading to stronger representations. The output representations are fed into
+classifier. We evaluate our methods on four datasets, COFW, AFLW, WFLW and 300W.
 
 <div align=center>
 

@@ -220,7 +220,6 @@ def inference(config, data_loader, model):
                 # flip W
                 flip_input = torch.flip(inp, dim=[3])
                 flip_output = model(flip_input)
-                # [-1] ??
                 flip_output = flip_back(flip_output[-1].data.cpu())
                 score_map += flip_output
             # accuracy
