@@ -158,17 +158,17 @@ def crop_v2(img, center, scale, output_size, rot=0):
     return dst_img
 
 
-def get_transform(center, scale, res, rot=0):
+def get_transform(center, scale, output_size, rot=0):
     """
     General image processing functions
     """
     # Generate transformation matrix
     h = 200 * scale
     t = np.zeros((3, 3))
-    t[0, 0] = float(res[1]) / h
-    t[1, 1] = float(res[0]) / h
-    t[0, 2] = res[1] * (-float(center[0]) / h + .5)
-    t[1, 2] = res[0] * (-float(center[1]) / h + .5)
+    t[0, 0] = float(output_size[1]) / h
+    t[1, 1] = float(output_size[0]) / h
+    t[0, 2] = output_size[1] * (-float(center[0]) / h + .5)
+    t[1, 2] = output_size[0] * (-float(center[1]) / h + .5)
     t[2, 2] = 1
     if not rot == 0:
         rot = -rot  # To match direction of rotation from cropping
@@ -180,17 +180,17 @@ def get_transform(center, scale, res, rot=0):
         rot_mat[2, 2] = 1
         # Need to rotate around center
         t_mat = np.eye(3)
-        t_mat[0, 2] = -res[1]/2
-        t_mat[1, 2] = -res[0]/2
+        t_mat[0, 2] = -output_size[1]/2
+        t_mat[1, 2] = -output_size[0]/2
         t_inv = t_mat.copy()
         t_inv[:2, 2] *= -1
         t = np.dot(t_inv, np.dot(rot_mat, np.dot(t_mat, t)))
     return t
 
 
-def transform_pixel(pt, center, scale, res, invert=0, rot=0):
+def transform_pixel(pt, center, scale, output_size, invert=0, rot=0):
     # Transform pixel location to different reference
-    t = get_transform(center, scale, res, rot=rot)
+    t = get_transform(center, scale, output_size, rot=rot)
     if invert:
         t = np.linalg.inv(t)
     new_pt = np.array([pt[0] - 1, pt[1] - 1, 1.]).T
@@ -198,19 +198,19 @@ def transform_pixel(pt, center, scale, res, invert=0, rot=0):
     return new_pt[:2].astype(int) + 1
 
 
-def transform_preds(coords, center, scale, res):
+def transform_preds(coords, center, scale, output_size):
 
     for p in range(coords.size(0)):
-        coords[p, 0:2] = torch.tensor(transform_pixel(coords[p, 0:2], center, scale, res, 1, 0))
+        coords[p, 0:2] = torch.tensor(transform_pixel(coords[p, 0:2], center, scale, output_size, 1, 0))
     return coords
 
 
-def crop(img, center, scale, res, rot=0):
+def crop(img, center, scale, output_size, rot=0):
     center_new = center.clone()
 
     # Preprocessing for efficient cropping
     ht, wd = img.shape[0], img.shape[1]
-    sf = scale * 200.0 / res[0]
+    sf = scale * 200.0 / output_size[0]
     if sf < 2:
         sf = 1
     else:
@@ -218,8 +218,8 @@ def crop(img, center, scale, res, rot=0):
         new_ht = int(np.math.floor(ht / sf))
         new_wd = int(np.math.floor(wd / sf))
         if new_size < 2:
-            return torch.zeros(res[0], res[1], img.shape[2]) \
-                        if len(img.shape) > 2 else torch.zeros(res[0], res[1])
+            return torch.zeros(output_size[0], output_size[1], img.shape[2]) \
+                        if len(img.shape) > 2 else torch.zeros(output_size[0], output_size[1])
         else:
             img = scipy.misc.imresize(img, [new_ht, new_wd])  # (0-1)-->(0-255)
             center_new[0] = center_new[0] * 1.0 / sf
@@ -227,9 +227,9 @@ def crop(img, center, scale, res, rot=0):
             scale = scale / sf
 
     # Upper left point
-    ul = np.array(transform_pixel([0, 0], center_new, scale, res, invert=1))
+    ul = np.array(transform_pixel([0, 0], center_new, scale, output_size, invert=1))
     # Bottom right point
-    br = np.array(transform_pixel(res, center_new, scale, res, invert=1))
+    br = np.array(transform_pixel(output_size, center_new, scale, output_size, invert=1))
 
     # Padding so that when rotated proper amount of context is included
     pad = int(np.linalg.norm(br - ul) / 2 - float(br[1] - ul[1]) / 2)
@@ -255,7 +255,7 @@ def crop(img, center, scale, res, rot=0):
         # Remove padding
         new_img = scipy.misc.imrotate(new_img, rot)
         new_img = new_img[pad:-pad, pad:-pad]
-    new_img = scipy.misc.imresize(new_img, res)
+    new_img = scipy.misc.imresize(new_img, output_size)
     return new_img
 
 
